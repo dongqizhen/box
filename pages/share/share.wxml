@@ -1,0 +1,76 @@
+<!--pages/share/share.wxml-->
+<view class="sharebox content">
+	<view class="sharebox-con paddingtop43 flex column aligncenter justifycenter">
+		<view class="sharebox-con-title fontsize30 ">{{toptitle}}</view>
+		<view class="sharebox-con-select fontweight fontsize28 flex row ">
+			<view class="sharebox-con-select-oddnumber flex justifycenter aligncenter">编号</view>
+			<view class="sharebox-con-select-oddnumber flex justifycenter aligncenter">规格(高x宽)</view>
+			<view class="sharebox-con-select-use flex justifycenter aligncenter">预约(使用)</view>
+		</view>
+		<!-- 可使用 -->
+		<view class="sharebox-con-select flex row" wx:for="{{available}}">
+			<view class="sharebox-con-select-oddnumber flex justifycenter aligncenter">{{item.roomNum}}</view>
+			<view class="sharebox-con-select-oddnumber flex justifycenter aligncenter">{{item.s_size}}</view>
+			<view class="sharebox-con-select-use flex justifycenter aligncenter">
+				<view class="openbox flex aligncenter justifycenter" data-box_cell_id="{{item.id}}" bindtap="appointment">预约
+				</view>
+				<view class="openboxopen flex aligncenter justifycenter marginleft12 huang" wx:if="{{itcp==ids}}"
+					data-box_cell_id="{{item.id}}" bindtap="openshare">开箱</view>
+				<view class="openboxopen flex aligncenter justifycenter marginleft12 hui " wx:else bindtap="nosao" >开箱</view>
+			</view>
+		</view>
+		<!-- 可使用 -->
+		<!-- 已占用 -->
+		<view wx:if="{{bottom}}" class="margintop45">
+		</view>
+		<view wx:if="{{bottom}}" class="sharebox-con-select flex row " wx:for="{{occupy}}">
+			<view class="sharebox-con-select-oddnumber flex justifycenter aligncenter">{{item.roomNum}}</view>
+			<view class="sharebox-con-select-oddnumber flex justifycenter aligncenter">{{item.s_size}}</view>
+			<view class="sharebox-con-select-use flex row aligncenter">
+				<view class="openbox flex bg9c9c9c aligncenter justifycenter">占用</view>
+			</view>
+		</view>
+		<!-- 已占用 -->
+		<view wx:if="{{occupy}}" class="flex justifycenter aligncenter" style="width: 100%;height: 50rpx;" bindtap="xiala">
+			<image class="xiala margintop45" src="{{big}}"></image>
+		</view>
+	</view>
+</view>
+<!-- 开箱弹框 -->
+<view class="kuang-box" wx:if="{{opentan}}">
+	<view class="kuang" style="padding-top:40rpx;">
+		<view class="kuang-text" style="padding:46rpx;">{{contenttext}}</view>
+		<view class="kuang-btn" style="padding: 20rpx 46rpx 40rpx 46rpx;box-sizing: border-box;">
+			<view bindtap="kuangbtnB">取消</view>
+			<view style="color: #FC6E22;" bindtap="kuangopenbtn">确认</view>
+		</view>
+	</view>
+</view>
+<!-- 开箱弹框 -->
+<!-- 预约弹框 -->
+<view class="kuang-box" wx:if="{{tan}}">
+	<view class="kuang" style="padding-top:40rpx;">
+		<view class="kuang-text" style="padding:46rpx 0;">{{contenttext}}</view>
+		<view class="kuang-btn" style="padding: 20rpx 46rpx 40rpx 46rpx;box-sizing: border-box;">
+			<view bindtap="kuangbtnB">取消</view>
+			<view style="color: #FC6E22;" bindtap="kuangbtn">确认</view>
+		</view>
+	</view>
+</view>
+<!-- 预约弹框 -->
+<!-- 你是否关闭当前箱子 -->
+<view class="kuang-box" wx:if="{{share_tishi}}">
+	<view class="kuang relative" style="padding-top:40rpx;">
+		<view style="width:100%;text-align:center;box-sizing:border-box;padding:46rpx" class="fontsize30">请勿存放贵重物物品，及时关箱
+		</view>
+		<view class="kuang-btn flex justifycenter" style="padding:20rpx 46rpx 40rpx 46rpx;box-sizing:border-box">
+			<!-- <view bindtap="share_openusebox_cancel">取消</view> -->
+			<view class="kuang-btn-view" style="color: #FC6E22;" style="padding:30rpx 50rpx;" bindtap="share_openusebox_cel">我已关箱{{daojishi}}</view>
+		
+		</view>
+		<view class="kuang_box_close" wx:if="{{judge_miao==0}}" bindtap="kuang_box_close">
+			<image src="../../images/close.png"></image>
+		</view>
+	</view>
+</view>
+<!-- 你是否关闭当前箱子 -->

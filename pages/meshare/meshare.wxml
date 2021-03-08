@@ -1,0 +1,144 @@
+<!--pages/meshare/meshare.wxml-->
+<view class="box content">
+	<!-- 共享柜口 -->
+	<view wx:if="{{waybilllist}}" class="cabinet">
+		<view class="sharebox" wx:for="{{waybilllist}}" wx:key="*this">
+			<!-- 默认内容 -->
+			<view class="sharebox-top">
+				<text>共享 <text>{{item.get_cell_info.roomNum}}</text></text>
+			</view>
+			<view class="fontsize28 colorfc6e22 paddingleft30 margintop14">
+				{{item.get_cell_info.get_area_info.name}}{{item.get_cell_info.get_area_info.area_name}}{{item.get_cell_info.get_box_info.town}}{{item.get_cell_info.get_box_info.unit}}{{item.get_cell_info.roomNum}}
+			</view>
+			<!-- 默认内容 -->
+			<view class="sharebox-con">
+				<view class="sharebox-con-title margintop14 fontsize28">
+					<!-- 存入人 -->
+					<view>
+						<text>存入人：</text>
+						<text>{{item.get_user_info.nickname}}</text>
+					</view>
+					<!-- 存入时间 -->
+					<view>
+						<text>存入时间：</text>
+						<text>{{item.created_at}}</text>
+					</view>
+					<!-- 运单号 -->
+					<view>
+						<text class="whitespace">运单号：</text>
+						<view class="waybillbox">
+							<input class="{{isDisabled==false?'borderbottom':''}}" data-id="{{item.id}}" disabled='{{isDisabled}}' value="{{item.text}}" bindinput="waybilll"></input>
+							<image class="editbox" data-id="{{item.id}}" bindtap="editbox" src="/images/bianji.png"></image>
+						<image class="editbox" data-id="{{item.id}}" data-oddnumber="{{item.text}}" bindtap="copy" src="/images/copy.png"></image>
+						</view>
+					</view>
+					<!-- 开箱密码 -->
+					<view>
+						<text>开箱密码：</text>
+						<text class="fontweight" style="padding-left:42rpx;font-size:28rpx;color:#fd7e32;">{{item.get_cell_info.tmp_pwd.passwd}}</text>
+						<image class="editbox" data-password="{{item.get_cell_info.tmp_pwd.passwd}}" bindtap="sharepass" style="margin-left:172rpx;" src="../../images/copy.png"></image>
+					</view>
+				</view>
+				<!-- 空间分享、添加可开箱人 -->
+				<view class="sharebox-con-bottom ">
+					<view class="flex row fontsize28 colorfc6e22">
+						<!--  空间分享 -->
+						<view class="sharebox-con-bottom-space margintop60" data-item_number="{{item.number}}" data-share_id="{{item.id}}" bindtap="share_space">
+							<image class="sharebox-con-bottom-space-image paddingleft30 " src="/images/tuoyuan.png"></image>
+							<text class="paddingleft14">空间分享</text>
+						</view>
+						<!-- 添加可开箱人 -->
+						<view class="sharebox-con-bottom-space margintop60" data-box_id="{{item.number}}" data-boxcellid="{{item.box_cell_id}}" data-share_id="{{item.id}}" bindtap="share_peoplebox" style="margin-left:76rpx">
+							<image class="sharebox-con-bottom-space-image paddingleft30 " src="/images/tuoyuan.png"></image>
+							<text class="paddingleft14">添加可开箱人</text>
+						</view>
+					</view>
+
+				</view>
+				<!-- 空间分享、添加可开箱人 -->
+				<!-- 用户成员 -->
+				<view class="sharebox-con-bottom-member margintop26 flex row aligncenter between" wx:for="{{item.get_use_user}}">
+					<view class="flex row aligncenter" wx:if="{{item.get_user_info}}">
+						<image src="{{item.get_user_info.avatarurl}}"></image>
+						<view class="flex column marginleft35">
+							<text>{{item.get_user_info.nickname}}</text>
+							<text class="color999999 fontsize22">{{item.phone}}</text>
+						</view>
+					</view>
+					<view class="flex row aligncenter" wx:else>
+						<view class="unregistered"></view>
+						<view class="flex column marginleft35">
+							<text>该用户未注册</text>
+							<text class="color999999 fontsize22">{{item.phone}}</text>
+						</view>
+					</view>
+					<image style="width:32rpx;height:32rpx;" src="/images/delete2.svg" data-phone="{{item.phone}}" data-share_id="{{item.share_id}}" bindtap="deleteuserinfo"></image>
+				</view>
+				<!-- 用户成员 -->
+			</view>
+			<!-- 下拉图标 -->
+			<!-- <image class="sharebox-top-ig" src="{{imgpull}}" bindtap="bindtapbox" data-index="{{index}}"></image> -->
+		</view>
+	</view>
+	<!-- 共享柜口 -->
+	<!-- 我的预约   -->
+	<view wx:if="{{subscribe}}">
+	<!--  -->
+		<view class="mymack margintop24" wx:for="{{subscribe}}">
+			<view class="mymack-name">
+				<view class="mymack-name-title">
+					<text>我的预约</text>
+					<text>{{item.get_cell_info.roomNum}}</text>
+				</view>
+			</view>
+			<view class="margintop30 fontsize28 colorfc6e22" style="text-align:left;">
+			{{item.get_cell_info.get_area_info.name}}{{item.get_cell_info.get_area_info.area_name}}{{item.get_cell_info.get_box_info.town}}{{item.get_cell_info.get_box_info.unit}}{{item.get_cell_info.roomNum}}
+			</view>
+			<view class="mymack-pass flex row between margintop45">
+				<view class="mymack-pass-name">开箱密码</view>
+				<view class="mymack-pass-wor fontweight colorfc6e22">{{item.get_cell_info.tmp_pwd.passwd}}</view>
+				<image class="editbox" data-password="{{item.get_cell_info.tmp_pwd.passwd}}" bindtap="copyme" src="/images/copy.png"></image>
+			</view>
+		</view>
+	</view>
+	<!-- 我的预约 -->
+
+
+</view>
+
+<!-- 是否删除共享箱成员 -->
+<view class="kuang-box" wx:if="{{sharekuang}}">
+	<view class="kuang">
+		<view class="kuang-text" style="padding:46rpx 0;"> <text>{{tishi}}</text> <text>{{contenttext}}</text></view>
+		<view class="kuang-btn" style="padding: 20rpx 46rpx 40rpx 46rpx;box-sizing: border-box;">
+			<view bindtap="sharekuangbtnB">取消</view>
+			<view style="color: #FC6E22;" bindtap="sharekuangbtn">确认</view>
+		</view>
+	</view>
+</view>
+<!-- 是否删除共享箱成员 -->
+<!-- 模糊搜索 -->
+<view class="kuang-box" wx:if="{{share_space}}">
+		<view class="kuang relative" style="padding-top:40rpx">
+			<input type="text" style="height: 74rpx;border: 1px solid rgba(222,222,222,1);border-radius: 44rpx;text-align: center;margin:46rpx;background: rgba(238, 238, 238, 1);width: 508rpx;z-index:99;" class="fontsize30" bindinput="space_share" placeholder="请输入户号" value="{{value_roomNum}}"></input>
+			<view class="kuang-btn" style="padding:5rpx 46rpx 40rpx 46rpx;box-sizing:border-box">
+				<view bindtap="kuangbtnshareB">取消</view>
+				<view style="color: #FC6E22;" bindtap="kuangbtnshare">确认</view>
+			</view>
+			<view wx:if="{{share_vagule}}" class="kuang-vague">
+				<view wx:for="{{share_vagule_text}}" data-roomNum="{{item.roomNum}}" data-id="{{item.id}}" bindtap="share_vagule_text" class="marginbottom40">{{item.roomNum}}</view>
+			</view>
+		</view>
+	</view>
+<!-- 模糊搜索 -->
+<!-- 添加可开箱人 -->
+<view class="kuang-box" wx:if="{{share_people}}">
+	<view class="kuang relative" style="padding-top:40rpx;">
+		<!-- <view style="width:100%;text-align:center;box-sizing:border-box;padding:20rpx" class="fontsize30">请输入添加人手机号</view> -->
+		<input type="text" style="height: 88rpx;border: 1px solid rgba(222,222,222,1);border-radius: 44rpx;text-align: center;margin:46rpx;" class="fontsize30" bindinput="space_people" placeholder="请输入手机号" value="{{value_people}}"></input>
+		<view class="kuang-btn" style="padding:20rpx 46rpx 40rpx 46rpx;box-sizing:border-box">
+			<view bindtap="share_peopleB">取消</view>
+			<view style="color: #FC6E22;" bindtap="share_peopleaA">确认</view>
+		</view>
+	</view>
+</view>

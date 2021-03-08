@@ -1,0 +1,205 @@
+/* pages/manage/manage.wxss */
+page{
+  background: #fff;
+}
+.content{
+  padding: 0 40rpx 0 40rpx
+}
+.header{
+  padding-top: 71rpx;
+  /* display: flex; */
+}
+.name{
+  font-size: 48rpx;
+  color: #333;
+  display: inline-block;
+  padding-top: 31rpx;
+  /* flex: 1 */
+}
+.logo{
+  width:102rpx;
+  height:106rpx;
+  border-radius:50%;
+  text-align: center;
+  border:1px solid rgba(252,110,34,1);
+  vertical-align: middle
+}
+.logo_view{
+  width:124rpx;
+  height:124prx;
+  background:#fff0e8;
+  border-radius:50%;
+  text-align: center;
+  float: right;
+  /* line-height: 124rpx; */
+  position: relative;
+}
+.huangguan{
+  position: absolute;
+  width: 58rpx;
+  height: 48rpx;
+  top: -30rpx;
+  left: 34rpx;
+}
+.nonOwner{
+  font-size:20rpx;
+  color:#fff;
+  background:#c2c2c2;
+  border-radius:12rpx;
+  padding: 2rpx 5rpx;
+  position: absolute;
+  bottom: -20rpx;
+  left: 30rpx;
+}
+.con_list{
+  background:rgba(255,255,255,1);
+  box-shadow:0px 10rpx 35rpx 0px rgba(0, 0, 0, 0.1);
+  border-radius:44rpx;
+  padding: 50rpx 0;
+  margin-top: 100rpx
+}
+.list1{
+  display: flex;
+}
+.list1_left{
+  flex: 1;
+  color: #999;
+  font-size: 30rpx;
+  padding-left: 28rpx;
+}
+.list1_right{
+  flex: 1;
+  text-align: right;
+  padding-right: 29rpx;
+}
+.list1_right text{
+  color: #FC6E22;
+  font-size: 30rpx;
+  padding-left: 11rpx;
+}
+.add{
+  width: 38rpx;
+  height: 38rpx;
+  vertical-align: middle;
+}
+.list2{
+  padding-left: 29rpx;
+  padding-right: 24rpx;
+}
+.list2{
+  padding-top: 56rpx;
+}
+.list2_left{
+  /* position: relative; */
+  display: inline-block
+}
+.list2_logo{
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  border:1rpx solid #e1e1e1;
+  /* position: absolute */
+}
+.ovnerImg{
+  position: absolute;
+  width: 58rpx;
+  height: 48rpx;
+  top: -40rpx;
+  left: 15rpx;
+}
+.list2_noOwner{
+  font-size: 20rpx;
+  color: #fff;
+  background: #C2C2C2;
+  position: absolute;
+  border-radius:12rpx;
+  bottom: -5rpx;
+  padding: 2rpx 5rpx;
+  left: 12rpx
+}
+.list2_center{
+  display: inline-block;
+  padding-left: 20rpx;
+  vertical-align: top
+}
+.list2_name{
+  font-size: 30rpx;
+  color: #333;
+}
+.list2_phone{
+  font-size: 30rpx;
+  color: #999999;
+  padding-top: 10rpx
+}
+.list2_time{
+  font-size: 18rpx;
+  color: #999;
+  padding-top: 10rpx
+}
+.list_center2{
+  display: inline-block;
+  border:1px solid #FC6E22;
+  /* background:; */
+  box-shadow:0px 5rpx 15rpx 0px rgba(252,110,34,0.4);
+  border-radius:22rpx;
+  padding: 6rpx 12rpx;
+  color: #FC6E22;
+  font-size: 26rpx;
+  vertical-align: top;
+  margin-left: 101rpx;
+}
+.list2_right{
+ float: right;
+}
+.delete{
+  width:36rpx;
+  height: 36rpx;
+  vertical-align: middle
+}
+.phoneNumber{
+  height:88rpx;
+  border:1px solid rgba(222,222,222,1);
+  border-radius:44rpx;
+  line-height: 88rpx;
+}
+.keyImg{
+  width: 38rpx;
+  height: 38rpx;
+  vertical-align: middle
+}
+.pwd_text{
+  color: #999;
+  font-size: 30rpx;
+  padding-left: 17rpx;
+}
+.pwd_view{
+  padding-left: 29rpx;
+  padding-right: 24rpx;
+}
+.pwd_num{
+  font-size: 48rpx;
+  color: #333;
+  padding-top: 44rpx;
+  display: inline-block
+}
+.pwd_btn{
+  float: right;
+  margin-top: 36rpx;
+}
+.pwd_btn button{
+  display: inline-block;
+  /* height: 60rpx !important;
+ line-height: 60rpx; */
+  font-size: 30rpx;
+  color:#fff;
+  width: auto !important;
+  background:linear-gradient(119deg,#3AD7F9,#22A2FC) !important;
+  box-shadow:0px 10rpx 35rpx 0px rgba(90,205,253,0.4);
+  border-radius:40rpx;
+  height: auto !important;
+  padding: 16rpx 28rpx;
+}
+.pwd_btn button:last-child{
+  margin-left: 19rpx;
+  padding: 16rpx 38rpx;
+}

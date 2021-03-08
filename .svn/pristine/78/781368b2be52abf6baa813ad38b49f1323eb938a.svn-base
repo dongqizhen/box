@@ -1,0 +1,77 @@
+<!--index.wxml-->
+<view class="content">
+<!--  -->
+<!-- 开锁 -->
+<dialog id="modal"
+            cancelText="取消"
+            confirmText="确认"
+            bind:cancelEvent="_cancelEvent"  
+            bind:confirmEvent="_confirmEventFirst" 
+            >
+
+    <view class='modal-body'>
+        <view> 确认您本人在箱前，打开箱门吗？</view>     
+        <!-- <view> 这是自定义内容2 </view>    
+        <view> 这是自定义内容3 </view>     -->
+    </view>
+    </dialog>
+
+    <!-- 创建变更 -->
+    <dialog id="change"
+            cancelText="取消"
+            confirmText="确认"
+            bind:cancelEvent="_cancelEventChange"  
+            bind:confirmEvent="_confirmEventChange">
+
+    <view class='modal-body'>
+        <view> 确认变更密码吗？</view>     
+        <!-- <view> 这是自定义内容2 </view>    
+        <view> 这是自定义内容3 </view>     -->
+    </view>
+    </dialog>
+    <dialog1 id="modalA"
+      text="创建密码"
+      cancelText="取消"
+      confirmText="确认创建"
+      bind:cancelEvent="_cancelEvent"  
+      bind:confirmEvent="_confirmEventFirstA" 
+      >
+
+    <view class='modal-body'>
+    <input type="number" placeholder-style="color:#999999;font-size:30rpx" placeholder="请输入密码" class="phoneNumber" value="{{pwd}}" bindinput='changePhone'></input>
+    </view>
+    </dialog1>
+<!--  -->
+<view class='list-msg'>
+<!--下拉框  -->
+    <view class='list-msg2' bindtap='bindShowMsg'>
+        <text>{{tihuoWay}}</text>
+        <image style='height:20rpx;width:20rpx;' src='{{imgSrc}}'></image>
+    </view>
+<!-- 下拉需要显示的列表 -->
+    <view class="select_box" wx:if="{{select}}">
+    <view  class="select_one" bindtap="mySelect" wx:for="{{list}}" wx:key data-name="{{item.adress}}" data-cabinetid = "{{item.cabinet_id}}"  data-latticeid = "{{item.lattice_id}}" wx:for-index="idx" data-index="{{idx}}">{{item.adress}}
+    <image src="../../images/selectImg.png" class="selectImg" hidden='{{remarkinfo[idx]}}' data-index="{{idx}}"></image>
+    </view>
+    </view>
+</view>
+<!--  -->
+<view class="list">
+  <view style="display:inline-block">
+      <view>
+        <image src="../../images/keyImg.png" class="keyImg"></image>
+        <text class="keyKext">密码开箱（长效）</text>
+      </view>
+      <view class="num">{{pwd}}</view>
+  </view>
+  <view class="list_right" bindtap="change">创建/变更</view>
+  
+</view>
+</view>
+<!--  -->
+<view class="content_bottom">
+  <image src="../../images/bg.png" class="bg_bottom"></image>
+  <image class="openColck" src="../../images/yuechi.png" bindtap="openColck"></image>
+  <image src="{{logo}}" class="oimg"></image>
+</view>
+

@@ -1,0 +1,56 @@
+/**index.wxss**/
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+
+.usermotto {
+  margin-top: 200px;
+}
+
+.yzlogin {
+  background: #4D923A ;
+  color: #fff;
+}
+
+.user_text {
+  margin-top: 30rpx;
+  font-size: 32rpx;
+  text-align: center;
+}
+
+.cancelbox {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 100rpx;
+
+}
+
+.cancel {
+  width: 328rpx;
+  height: 40rpx;
+  background: #4761E0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 20rpx;
+  border-radius: 4rpx;
+  color: white;
+  font-weight: bolder;
+}

@@ -1,0 +1,112 @@
+<!--pages/manage/manage.wxml-->
+<view class="content">
+<!-- 添加成员 -->
+<dialog1 id="modal"
+           
+            cancelText="取消"
+            confirmText="确认添加"
+            bind:cancelEvent="_cancelEvent"  
+            bind:confirmEvent="_confirmEventFirst" 
+            >
+
+    <view class='modal-body'>
+    <input type="number" placeholder-style="color:#999999;font-size:30rpx" placeholder="请输入添加成员手机号" class="phoneNumber"></input>
+        <!-- <view> 添加成员</view>      -->
+        <!-- <view> 这是自定义内容2 </view>    
+        <view> 这是自定义内容3 </view>     -->
+    </view>
+    </dialog1>
+
+    <!-- 转让 -->
+    <dialog id="change"
+           
+            cancelText="取消"
+            confirmText="确认"
+            bind:cancelEvent="_cancelEventChange"  
+            bind:confirmEvent="_confirmEventChange" 
+            >
+
+    <view class='modal-body'>
+        <view> 确认将房主转让给他吗？</view>     
+        <!-- <view> 这是自定义内容2 </view>    
+        <view> 这是自定义内容3 </view>     -->
+    </view>
+    </dialog>
+    <!-- 删除成员 -->
+    <dialog id="delete"
+           
+            cancelText="取消"
+            confirmText="确认"
+            bind:cancelEvent="_cancelEvent"  
+            bind:confirmEvent="_confirmEventDelete" 
+            >
+
+    <view class='modal-body'>
+        <view> 确认删除此成员吗？</view>     
+        <!-- <view> 这是自定义内容2 </view>    
+        <view> 这是自定义内容3 </view>     -->
+    </view>
+    </dialog>
+<!--  -->
+  <view class="header">
+    <text class="name">可乐不爱喝可乐</text>
+    <view class="logo_view">
+       <image src="../../images/logo.png" class="logo"></image>
+       <image src="../../images/huangguan.png" class="huangguan"></image>
+       <text class="nonOwner ">非房主</text>
+    </view>
+  </view>
+  <!--  -->
+  <view class="con_list">
+      <view class="list1">
+        <text class="list1_left">我的家庭成员</text>
+        <view class="list1_right" bindtap="addMember">
+          <image src="../../images/tuoyuan.png" class="add"></image>
+          <text>添加成员</text>
+        </view>
+      </view>  
+                                              <!--  -->
+     <view class="list2">
+        <view class="list2_left">
+        <view style="width:88rpx;height:88rpx;position:relative">
+            <image src="../../images/img1.png" class="list2_logo"></image>
+            <image src="../../images/huangguan.png" class="ovnerImg"></image>
+        </view>
+         
+        </view>
+        <view class="list2_center">
+            <view class="list2_name">成员1昵称</view>
+            <view class="list2_phone">15652958688</view>
+        </view>
+          <view class="list_center2" bindtap="reverse">
+          转让房主
+          </view>
+        <view class="list2_right" bindtap="delete">
+          <image src="../../images/delete.png" class="delete"></image>
+        </view>
+     </view>
+     <!--  -->
+     <view class="list2">
+        <view class="list2_left">
+        <view style="width:88rpx;height:88rpx;position:relative">
+            <image src="../../images/img1.png" class="list2_logo"></image>
+            <view class="list2_noOwner">非房主</view>
+            <!-- <image src="../../images/huangguan.png" class="ovnerImg"></image> -->
+        </view>
+         
+        </view>
+        <view class="list2_center">
+            <view class="list2_name">成员1昵称</view>
+            <view class="list2_phone">15652958688</view>
+        </view>
+          <view class="list_center2">
+          转让房主
+          </view>
+        <view class="list2_right">
+          <image src="../../images/delete.png" class="delete"></image>
+        </view>
+     </view>
+                                              <!--  -->
+  </view>
+  <!--  -->
+</view>

@@ -1,0 +1,18 @@
+<!--login.wxml-->
+<view class="container">
+	<view class="userinfo">
+		<button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" class="yzlogin"> 微信授权登录 </button>
+		<block wx:else>
+			<image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+			<text class="userinfo-nickname">{{userInfo.nickName}}</text>
+		</block>
+	</view>
+	<view class="cancelbox">
+		<button open-type="" bindtap="cancel" class="yzlogin">取消</button>
+	</view>
+
+	<view class="usermotto">
+		<view class="user-motto">{{motto}}</view>
+		<view class="user_text">扫一扫+注册/登录</view>
+	</view>
+</view>

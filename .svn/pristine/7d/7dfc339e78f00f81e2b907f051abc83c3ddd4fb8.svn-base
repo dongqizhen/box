@@ -1,0 +1,368 @@
+//index.js
+//获取应用实例
+const app = getApp()
+const utils = require('../../utils/util')
+// 显示繁忙提示
+var showBusy = text => wx.showToast({
+  title: text,
+  icon: 'loading',
+  duration: 10000
+});
+
+// 显示成功提示
+var showSuccess = text => wx.showToast({
+  title: text,
+  icon: 'none'
+});
+
+// 显示失败提示
+var showModel = (title, content) => {
+  wx.hideToast();
+
+  wx.showModal({
+    title,
+    content: JSON.stringify(content),
+    showCancel: false
+  });
+};
+Page({
+  data:{
+    topic:"3",//二维码携带的参数
+    select: false,
+    tihuoWay: '',
+    list:[],
+    cabinet_id:"",//箱子id
+    lattice_id:"",//阁孔id
+    imgSrc:"../../images/jiantou2.png",
+    remarkinfo:[],
+    idx: 0,
+    visible: false,
+    text:"创建/变更",//创建还是变更
+    pwd:""
+  },
+  //监听手机号输入
+  changePhone: function (e) {
+    var that = this;
+    that.setData({
+      pwd: e.detail.value
+    })
+  },
+  onLoad: function (options) {
+    var that = this;
+    //扫码绑定
+    wx.request({
+      url: app.globalData.publicAdress + 'api/iot/binding',
+      method: 'POST',
+      header: {
+        'content-type': 'application/json', // 默认值
+        'Accept': 'application/vnd.cowsms.v2+json',
+        'Authorization': 'Bearer ' + wx.getStorageSync("token"),
+      },
+      data: { "lattice_id": that.data.topic},
+      success: function (res) {
+       console.log(res)     
+      }
+    })
+    //地址列表接口
+    wx.request({
+      url: app.globalData.publicAdress + 'api/user/MeBox',
+      method: "post",
+      header: {
+        'content-type': 'application/json', // 默认值
+        'Accept': 'application/vnd.cowsms.v2+json',
+        'Authorization': 'Bearer ' + wx.getStorageSync("token"),
+      },
+      success: function (res) {
+        // console.log(res)
+        //如果token失效   则返回新的token  
+        if (res.header.Authorization) {
+          var str = res.header.Authorization;
+          wx.removeStorageSync("token");
+          wx.setStorageSync("token", str.substring(7, str.length))
+        }
+        if (res.statusCode == '200') {
+          for (var i = 0; i < res.data.data.length;i++){
+            that.data.list.push({ adress: res.data.data[i].cabinet.province_id + res.data.data[i].cabinet.district_id + res.data.data[i].cabinet.detailed_address + res.data.data[i].Lattice.room_number, cabinet_id: res.data.data[i].Lattice.cabinet_id, lattice_id: res.data.data[i].lattice_id})
+          }
+          //默认的
+          that.setData({
+            list: that.data.list
+          })
+          
+          for (var i = 0; i < that.data.list.length; i++) {
+            that.data.remarkinfo[i] = true;
+            if (wx.getStorageSync("selectName") == that.data.list[i].adress ) {
+              that.data.remarkinfo[i] = false;
+              that.setData({
+                remarkinfo: that.data.remarkinfo,
+                tihuoWay: wx.getStorageSync("selectName"),
+                cabinet_id: wx.getStorageSync("cabinet_id")
+              })
+            } else if (wx.getStorageSync("selectName") == that.data.list[0].adress) {
+              that.data.remarkinfo[0] = false;
+              that.setData({
+                remarkinfo: that.data.remarkinfo,
+                tihuoWay: wx.getStorageSync("selectName"),
+                cabinet_id: wx.getStorageSync("cabinet_id")
+              })
+            } 
+            if (!wx.getStorageSync("selectName")){
+              that.data.remarkinfo[0] = false;
+              that.setData({
+                remarkinfo: that.data.remarkinfo,
+                tihuoWay: that.data.list[0].adress,
+                cabinet_id: that.data.list[0].cabinet_id
+              })
+              wx.setStorageSync("selectName", that.data.tihuoWay);
+              wx.setStorageSync("cabinet_id", that.data.cabinet_id)
+            }
+            
+            if (wx.getStorageSync("lattice_id")){
+              that.setData({
+                lattice_id: wx.getStorageSync("lattice_id")
+              })
+              }else{
+                that.setData({
+                  lattice_id: that.data.list[0].lattice_id
+                })
+              wx.setStorageSync("lattice_id", that.data.lattice_id)
+              }
+            if (wx.getStorageSync("cabinet_id")){
+              that.setData({
+                cabinet_id: that.data.list[0].cabinet_id
+              })
+            }
+            app.globalData.lattice_id = wx.getStorageSync("lattice_id")
+            
+          }
+          
+        }
+      }
+    })
+    
+    that.LatticeInfo();
+    
+    this.data.topic = options.scene;  //scene 为参数名称，这样就可以获取到二维码里的参数
+    console.log(this.data.topic)
+  },
+  LatticeInfo:function(){
+    var that = this;
+    //成员列表   阁孔详情
+    wx.request({
+      url: app.globalData.publicAdress + 'api/iot/LatticeInfo',
+      method: 'POST',
+      header: {
+        'content-type': 'application/json', // 默认值
+        'Accept': 'application/vnd.cowsms.v2+json',
+        'Authorization': 'Bearer ' + wx.getStorageSync("token"),
+      },
+      data: {
+        "lattice_id": wx.getStorageSync("lattice_id"),
+      },
+      success: function (res) {
+        //如果token失效   则返回新的token  
+        if (res.header.Authorization) {
+          var str = res.header.Authorization;
+          wx.removeStorageSync("token");
+          wx.setStorageSync("token", str.substring(7, str.length))
+        }
+        if (res.statusCode == '200') {
+          if (res.data.data.Lattice.pwd == null) {
+            that.setData({
+              text: "创建",
+              pwd: ""
+            })
+          } else {
+            that.setData({
+              text: "变更",
+              pwd: res.data.data.Lattice.pwd,
+            })
+          }
+
+        }
+      }
+    })
+  },
+  //创建/变更密码
+  UpdatePwd:function(){
+    var that = this;
+    wx.request({
+      url: app.globalData.publicAdress + 'api/iot/UpdatePwd',
+      method: 'POST',
+      header: {
+        'content-type': 'application/json', // 默认值
+        'Accept': 'application/vnd.cowsms.v2+json',
+        'Authorization': 'Bearer ' + wx.getStorageSync("token"),
+      },
+      data: {
+        "lattice_id": app.globalData.lattice_id,
+        "pwd": that.data.pwd
+      },
+      success: function (res) {
+        console.log(res)
+        //如果token失效   则返回新的token  
+        if (res.header.Authorization) {
+          var str = res.header.Authorization;
+          wx.removeStorageSync("token");
+          wx.setStorageSync("token", str.substring(7, str.length))
+        }
+        if (res.statusCode == '200') {
+          that.ModalChange.hideModal();
+          showSuccess(res.data.data)
+          that.LatticeInfo();
+        } else if (res.statusCode == '400') {
+          showSuccess(res.data.errors.message[0]);
+          that.ModalChange.hideModal();
+        } else if (res.statusCode == '422') {
+          showSuccess(res.data.errors.message[0]);
+          that.ModalChange.hideModal();
+        } else if (res.statusCode == '429') {
+          showSuccess(res.data.errors.message[0]);
+          that.ModalChange.hideModal();
+        }
+      }
+    })
+  },
+  onReady: function () {
+    this.Modal = this.selectComponent("#modal");
+    this.ModalChange = this.selectComponent("#change");
+    this.ModalA = this.selectComponent("#modalA")
+  },
+  //开锁
+  openColck: function (e) {
+    this.Modal.showModal();
+  },
+  //创建
+  change:function(){
+    // if(this.data.text == "创建"){
+    //   this.ModalA.showModal()
+    // }else if(this.data.text == "变更"){
+      this.ModalChange.showModal();
+    // }
+    
+  },
+  //设置密码确定
+  _confirmEventFirstA:function(){
+    var that = this;
+    if(that.data.pwd == "" || that.data.pwd.length !=8){
+      wx.showToast({
+        title: '请设置8位数字密码',
+        icon:"none",
+        duration:2000
+      })
+    }else{
+      that.UpdatePwd()
+    }
+  },
+  //开箱确定
+  _confirmEventFirst: function () {
+    var that = this;
+    wx.request({
+      url: app.globalData.publicAdress + 'api/iot/AppOpen',
+      method: 'POST',
+      header: {
+        'content-type': 'application/json', // 默认值
+        'Accept': 'application/vnd.cowsms.v2+json',
+        'Authorization': 'Bearer ' + wx.getStorageSync("token"),
+      },
+      data: { 
+        "cabinet_id": that.data.cabinet_id, 
+        "lattice_id": wx.getStorageSync("lattice_id")
+        },
+      success: function (res) {
+        console.log(res)
+        //如果token失效   则返回新的token  
+        if (res.header.Authorization) {
+          var str = res.header.Authorization;
+          // console.log(str)
+          wx.removeStorageSync("token");
+          wx.setStorageSync("token", str.substring(7, str.length))
+        }
+        if (res.statusCode == '200') {
+          showSuccess(res.data)
+          that.Modal.hideModal();
+        } else if (res.statusCode == '400'){
+          showSuccess(res.data.errors.message[0]);
+          that.Modal.hideModal();
+        }
+      }
+    })
+  },
+  //创建、变更 确定
+  _confirmEventChange:function(){
+    var that = this;
+    that.UpdatePwd();
+  },
+  _cancelEvent: function () {
+    console.log("点击取消!");
+  },
+  _cancelEventChange:function(){
+    console.log("点击取消!");
+  },
+  // this.Modal.showModal();//显示
+  // this.Modal.hideModal(); //隐藏
+  //点击select
+  bindShowMsg() {
+    var that = this;
+    that.setData({
+      imgSrc:"../../images/jiantou1.png",
+      select: !that.data.select
+    })
+    //改变箭头颜色
+    if (that.data.select){
+      that.setData({
+        imgSrc: "../../images/jiantou1.png",
+      })
+    }else{
+      that.setData({
+        imgSrc: "../../images/jiantou2.png",
+      })
+    }
+  },
+  //点击options里的每一项
+  mySelect(e) {
+    var that = this;
+    var name = e.currentTarget.dataset.name;
+    var index = e.currentTarget.dataset.index;
+    var cabinetid = e.currentTarget.dataset.cabinetid;//箱子id
+    var latticeid = e.currentTarget.dataset.latticeid;//阁孔id
+    that.setData({
+      tihuoWay: name,
+      select: false,
+      cabinet_id: cabinetid,
+      lattice_id: latticeid
+    })
+    that.LatticeInfo()
+    wx.removeStorageSync("selectName");
+    wx.removeStorageSync("lattice_id")
+    wx.setStorageSync("selectName", that.data.tihuoWay);
+    wx.setStorageSync("lattice_id", that.data.lattice_id)
+    app.globalData.lattice_id = wx.getStorageSync("lattice_id")
+     //改变箭头颜色
+    if (that.data.select) {
+      that.setData({
+        imgSrc: "../../images/jiantou1.png",
+      })
+    } else {
+      that.setData({
+        imgSrc: "../../images/jiantou2.png",
+      })
+    }
+    for (var i = 0; i < that.data.list.length;i++){
+      that.data.remarkinfo[i] = true
+      that.setData({
+          remarkinfo: that.data.remarkinfo
+        })
+      if ( index == i){
+        that.data.remarkinfo[i] = false;
+        that.setData({
+          remarkinfo: that.data.remarkinfo
+        })
+      }
+    }
+  },
+  
+  onShareAppMessage:function(){
+
+  }
+})

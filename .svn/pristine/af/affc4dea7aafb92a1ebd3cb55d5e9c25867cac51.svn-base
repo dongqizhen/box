@@ -1,0 +1,115 @@
+//index.js
+//获取应用实例
+const app = getApp()
+
+Page({
+  data:{
+    select: false,
+    tihuoWay: '北京市新世纪家园C区16号楼3单元808',
+    list: [{ "name": "北京市幸福家园8号院6号楼3单元302" }, { "name": "北京市新世纪家园C区16号楼3单元808" }, { "name": "北京市新天地小区7号楼817" }, { "name": "北京市罗马家园C区1号楼1单元208" }],
+    imgSrc:"../../images/jiantou2.png",
+    // hidden:true,
+    remarkinfo:[],
+    idx: 0,
+    visible: false
+  },
+  onLoad: function (options) {
+    var that = this;
+    for (var i = 0; i < that.data.list.length; i++) {
+        // that.data.remarkinfo.push(i)
+        that.data.remarkinfo[i] = true;
+        if (that.data.tihuoWay == that.data.list[i].name){
+          that.data.remarkinfo[i] = false;
+          that.setData({
+            remarkinfo: that.data.remarkinfo
+          })
+        }else{
+          that.setData({
+            remarkinfo: that.data.remarkinfo
+          })
+        }
+    }
+  },
+  onReady: function () {
+    this.Modal = this.selectComponent("#modal");
+    this.Modal = this.selectComponent("#change")
+  },
+  //开锁
+  openColck: function (e) {
+    this.Modal.showModal();
+  },
+  //创建
+  change:function(){
+    this.Modal.showModal();
+  },
+  //开箱确定
+  _confirmEventFirst: function () {
+    this.Modal.hideModal();
+  },
+  //创建、变更 确定
+  _confirmEventChange:function(){
+    this.Modal.hideModal();
+  },
+  _cancelEvent: function () {
+    console.log("点击取消!");
+  },
+  _cancelEventChange:function(){
+    console.log("点击取消!");
+  },
+  // this.Modal.showModal();//显示
+  // this.Modal.hideModal(); //隐藏
+  //点击select
+  bindShowMsg() {
+    var that = this;
+    that.setData({
+      imgSrc:"../../images/jiantou1.png",
+      select: !that.data.select
+    })
+    //改变箭头颜色
+    if (that.data.select){
+      that.setData({
+        imgSrc: "../../images/jiantou1.png",
+      })
+    }else{
+      that.setData({
+        imgSrc: "../../images/jiantou2.png",
+      })
+    }
+  },
+  //点击options里的每一项
+  mySelect(e) {
+    var that = this;
+    var name = e.currentTarget.dataset.name;
+    var index = e.currentTarget.dataset.index;
+    that.setData({
+      tihuoWay: name,
+      select: false
+    })
+     //改变箭头颜色
+    if (that.data.select) {
+      that.setData({
+        imgSrc: "../../images/jiantou1.png",
+      })
+    } else {
+      that.setData({
+        imgSrc: "../../images/jiantou2.png",
+      })
+    }
+    for (var i = 0; i < that.data.list.length;i++){
+      that.data.remarkinfo[i] = true
+      that.setData({
+          remarkinfo: that.data.remarkinfo
+        })
+      if ( index == i){
+        that.data.remarkinfo[i] = false;
+        that.setData({
+          remarkinfo: that.data.remarkinfo
+        })
+      }
+    }
+  },
+  
+  onShareAppMessage:function(){
+
+  }
+})
