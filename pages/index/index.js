@@ -528,11 +528,11 @@ Page({
                   tihuoWay: text,
                   existence: false, //控制专属箱子所有内容----隐藏
                 })
-                wx.showToast({
-                  title: '您当前再所扫柜子未绑定柜口',
-                  icon: 'none',
-                  duration: 2000
-                })
+                // wx.showToast({
+                //   title: '您当前再所扫柜子未绑定柜口',
+                //   icon: 'none',
+                //   duration: 2000
+                // })
                 // 查共享箱状态
                 // 查看是否有预约箱子
                 that.shareallboxdata(saoid)
@@ -888,13 +888,13 @@ Page({
         if (res.authSetting['scope.userInfo']) {
           wx.getUserInfo({
             lang: "zh_CN",
-            success: function (res) {
+            success(res){
               if (!wx.getStorageSync("isPhone")) {
                 wx.navigateTo({
                   url: '../login-frame/login-frame',
                 })
               }
-              this.newopenbtn(wx.getStorageSync('boxid'))
+              that.newopenbtn(wx.getStorageSync('boxid'))
               // wx.request({
               //   url: app.globalData.publicAdress + 'api/openBoxButton',
               //   method: 'GET',
@@ -1042,9 +1042,7 @@ Page({
         })    
       },
       fail:(res)=>{
-        wx.showToast({
-          title: '取消支付',
-        })
+        showSuccess('取消支付')
       },
       complete:(res)=>{
         
@@ -2112,6 +2110,7 @@ Page({
       }
     })
   },
+  //共享箱子订单支付
   pay_share_order(){
     const {payInfo} = this.data.share_order_info
     this.pay(payInfo.data)
@@ -2144,6 +2143,7 @@ Page({
           that.setData({
             share_openusebox: false,
             share_tishi: true,
+            new_box_cell_id:that.data.share_box_cell_id
           })
           showSuccess('开箱成功')
           // console.log(that.data.daojishi)
