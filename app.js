@@ -1,8 +1,16 @@
 //app.js
 const utils = require('utils/util')
+Promise.prototype.finally = function (callback) {
+  let P = this.constructor;
+  return this.then(
+      value => P.resolve(callback()).then(() => value),
+
+      reason => P.resolve(callback()).then(() => { throw reason })
+  );
+};
 App({
 
-  onLaunch: function () {
+  onLaunch() {
 
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
@@ -10,38 +18,12 @@ App({
     // 
     if (wx.getStorageSync("token")) {
       //用户信息
-      wx.request({
-        url: 'https://s61.xboxes.cn/api/myInfo',
-        method: "get",
-        header: {
-          'content-type': 'application/json', // 默认值
-          'Accept': 'application/vnd.cowsms.v2+json',
-          'Authorization': 'Bearer ' + wx.getStorageSync("token"),
-        },
-        success: function (res) {
-          console.log(res)
-          //如果token失效   则返回新的token  
-          if (res.header.Authorization) {
-            var str = res.header.Authorization;
-            // console.log(str)
-            wx.removeStorageSync("token");
-            wx.setStorageSync("token", str.substring(7, str.length))
-          }
-
-          if (res.statusCode == '200') {
-
-          }
-          if (res.statusCode == '500') {
-            // this.Unauthenticated()
-          }
-        }
-      })
+     this.getUserInfo()
     } else {
+      console.log('登录')
       // 登录
       wx.login({
         success: res => {
-          // console.log(res)
-
           // 发送 res.code 到后台换取 openId, sessionKey, unionId
           wx.request({
             url: 'https://s61.xboxes.cn/api/login',
@@ -50,9 +32,8 @@ App({
               "code": res.code
             },
             success: function (res) {
-              console.log(res)
               // wx.removeStorageSync("token");
-              // wx.setStorageSync("token", res.data.data.token)
+              wx.setStorageSync("token", res.data.token)
               // wx.removeStorageSync("sessionId");
               wx.setStorageSync("sessionId", res.data.sessionId)
             },
@@ -60,34 +41,34 @@ App({
               // console.log(res)
             }
           })
-        }
+        },
       })
       // wx.setStorageSync('token', '222222222222')
     }
 
     //api/user/me
     // 获取用户信息
-    wx.getSetting({
-      success: res => {
-        if (res.authSetting['scope.userInfo']) {
-          // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-          wx.getUserInfo({
-            success: res => {
-              console.log(res)
-              // 可以将 res 发送给后台解码出 unionId
-              this.globalData.userInfo = res.userInfo
+    // wx.getSetting({
+    //   success: res => {
+    //     if (res.authSetting['scope.userInfo']) {
+    //       // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
+    //       wx.getUserInfo({
+    //         success: res => {
+    //           console.log(res)
+    //           // 可以将 res 发送给后台解码出 unionId
+    //           this.globalData.userInfo = res.userInfo
 
-              // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-              // 所以此处加入 callback 以防止这种情况
-              if (this.userInfoReadyCallback) {
-                this.userInfoReadyCallback(res)
-              }
+    //           // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+    //           // 所以此处加入 callback 以防止这种情况
+    //           if (this.userInfoReadyCallback) {
+    //             this.userInfoReadyCallback(res)
+    //           }
 
-            }
-          })
-        }
-      }
-    })
+    //         }
+    //       })
+    //     }
+    //   }
+    // })
     this.checkForUpdate();
 
 
@@ -182,6 +163,71 @@ App({
         fn.call(context, args);
       }, gapTime);
     };
+  },
+
+  getUserProfile () {
+    // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
+    return new Promise((resolve,reject)=>{
+      wx.getSetting({
+        success:(res)=>{
+          if (res.authSetting['scope.userInfo']) {
+            wx.getUserProfile({
+              desc: '用于显示用户资料',
+              success: (res) => {
+                console.log(res)
+                const {userInfo} = res
+                
+                this.globalData.userInfo = userInfo
+                wx.setStorageSync('wx_userInfo', userInfo)
+                // this.globalData.wx_userInfo = userInfo
+                this.globalData.profile_user = res
+                // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+                // 所以此处加入 callback 以防止这种情况
+                if (this.userInfoReadyCallback) {
+                  this.userInfoReadyCallback(res)
+                }
+                resolve(res)
+              }
+            })
+          }
+        },
+        fail:(err)=>{
+          reject(err)
+        }
+      })
+    })
+  },
+
+  getUserInfo(){
+    return new Promise((resolve,reject)=>{
+      wx.request({
+        url: 'https://s61.xboxes.cn/api/myInfo',
+        method: "get",
+        header: {
+          'content-type': 'application/json', // 默认值
+          'Accept': 'application/vnd.cowsms.v2+json',
+          'Authorization': 'Bearer ' + wx.getStorageSync("token"),
+        },
+        success: (res) => {
+          console.log(res)
+          //如果token失效   则返回新的token  
+          if (res.header.Authorization) {
+            var str = res.header.Authorization;
+            // console.log(str)
+            wx.removeStorageSync("token");
+            wx.setStorageSync("token", str.substring(7, str.length))
+          }
+
+          if (res.statusCode == '200') {
+            resolve()
+          }
+          if (res.statusCode == '500') {
+            reject()
+            // this.Unauthenticated()
+          }
+        }
+      })
+    })
   },
 
 

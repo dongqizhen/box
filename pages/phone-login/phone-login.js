@@ -146,14 +146,146 @@ Page({
             wx.removeStorageSync("token");
             wx.setStorageSync("token", str.substring(7, str.length))
           }
-          if (response.data.code == 20000) {
-            wx.switchTab({
-              url: '../home/home',
+          if (response.statusCode == 200) {
+            //成功
+            // wx.removeStorageSync("token");
+            // wx.setStorageSync("token", response.data.data.token)
+            // app.globalData.token = response.data.data.token;
+            // console.log('登录成功')
+            var getUrl = wx.getStorageSync("baseUrl")
+            // console.log(getUrl)
+            wx.removeStorageSync("isPhone")
+            wx.setStorageSync("isPhone", "isPhone")
+            if (wx.getStorageSync("baseUrl")) {
+
+              wx.switchTab({
+                url: "../../" + getUrl,
+              })
+              wx.removeStorageSync("baseUrl")
+            } else {
+              wx.switchTab({
+                url: '../index/index'
+              })
+            }
+
+          } else if (response.statusCode == 401) {
+            wx.showToast({
+              title: "token令牌无效",
+              icon: "none",
+              duration: 3000,
+            })
+          } else if (response.statusCode == 422) {
+            wx.showToast({
+              title: "请求参数无效",
+              icon: "none",
+              duration: 3000,
+            })
+          } else if (response.statusCode == 400) {
+            wx.showToast({
+              title: "请求失败",
+              icon: "none",
+              duration: 3000,
+            })
+          } else if (response.statusCode == 429) {
+            wx.showToast({
+              title: "请求次数太多",
+              icon: "none",
+              duration: 3000,
+            })
+          } else if (response.statusCode == 500) {
+            wx.showToast({
+              title: "服务端错误，请联系后台",
+              icon: "none",
+              duration: 3000,
             })
           }
         }
       })
       
+      const {signature,rawData,iv,encryptedData} = app.globalData.profile_user
+      wx.request({
+        url: app.globalData.publicAdress + 'api/register',
+        method: "post",
+        header: {
+          // 'content-type': 'application/json', // 默认值
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ' + wx.getStorageSync("token"),
+        },
+        data: {
+          sessionId: wx.getStorageSync('sessionId'),
+          rawData,
+          signature,
+          iv,
+          encryptedData
+        },
+        success:response=>{
+          if (response.statusCode == 200) {
+            //个人信息
+            wx.request({
+              url: 'https://s61.xboxes.cn/api/myInfo',
+              method: "get",
+              header: {
+                'content-type': 'application/json', // 默认值
+                'Accept': 'application/vnd.cowsms.v2+json',
+                'Authorization': 'Bearer ' + wx.getStorageSync("token"),
+              },
+              success: function (res) {
+                console.log(res)
+                //如果token失效   则返回新的token  
+                if (res.header.Authorization) {
+                  var str = res.header.Authorization;
+                  // console.log(str)
+                  wx.removeStorageSync("token");
+                  wx.setStorageSync("token", str.substring(7, str.length))
+                }
+                if (res.statusCode == '200') {
+                  that.setData({
+                    nickName: res.data.nickname,
+                    avatar_url: res.data.avatarurl
+                  })
+                }
+              }
+            })
+          } else if (response.statusCode == 401) {
+            wx.showToast({
+              title: "token令牌无效",
+              icon: "none",
+              duration: 3000,
+            })
+          } else if (response.statusCode == 401) {
+            wx.showToast({
+              title: "token令牌无效",
+              icon: "none",
+              duration: 3000,
+            })
+          } else if (response.statusCode == 422) {
+            wx.showToast({
+              title: "请求参数无效",
+              icon: "none",
+              duration: 3000,
+            })
+          } else if (response.statusCode == 400) {
+            wx.showToast({
+              title: "请求失败",
+              icon: "none",
+              duration: 3000,
+            })
+          } else if (response.statusCode == 429) {
+            wx.showToast({
+              title: "请求次数太多",
+              icon: "none",
+              duration: 3000,
+            })
+          } else if (response.statusCode == 500) {
+            wx.showToast({
+              title: "服务端错误，请联系后台",
+              icon: "none",
+              duration: 3000,
+            })
+          }
+        }
+      })
+ 
     }
   },
   /**

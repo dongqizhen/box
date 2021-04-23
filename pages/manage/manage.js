@@ -188,6 +188,10 @@ Page({
   },
   //添加成员
   addMember: function () {
+   const a =  this.verify()
+
+   if(!wx.getStorageSync('isPhone')) return
+    
     this.Modal.showModal();
   },
   //转让房主
@@ -200,6 +204,43 @@ Page({
     })
     this.ModalChange.showModal();
   },
+
+  login(){
+    this.verify()
+  },
+
+  //验证登陆
+ async verify(){
+    if(!wx.getStorageSync('isPhone')){
+      if(!wx.getStorageSync('wx_userInfo')){
+        await app.getUserProfile().then((res)=>{
+          wx.navigateTo({
+            url: '../login-frame/login-frame',
+          }) 
+        }).catch(()=>{
+          wx.setStorageSync("baseUrl", url);
+          wx.navigateTo({
+            url: '../login/login',
+          })
+        })
+        return false
+      }else{
+        wx.navigateTo({
+          url: '../login-frame/login-frame',
+        })
+
+        return false
+      }
+
+
+      
+    }else{
+      return true
+    }
+    
+  },
+
+
   //删除成员
   delete: function (e) {
     console.log(e)
@@ -215,6 +256,8 @@ Page({
   },
   //添加绑卡
   addCard: function () {
+    this.verify()
+    if(!wx.getStorageSync('isPhone')) return
     this.ModalAdd.showModal();
 
   },
@@ -231,6 +274,8 @@ Page({
   //创建变更临时密码
   temporary: function (e) {
     var that = this;
+    this.verify()
+    if(!wx.getStorageSync('isPhone')) return
     that.setData({
       pwdnum: e.currentTarget.dataset.type
     })
@@ -239,6 +284,8 @@ Page({
   //删除临时密码
   deleteTemporary: function (e) {
     var that = this;
+    this.verify()
+    if(!wx.getStorageSync('isPhone')) return
     // console.log(e)
     that.setData({
       pwdnum: e.currentTarget.dataset.type
@@ -606,61 +653,38 @@ Page({
   onShow: function () {
     // console.log(this.data.userList)
     var that = this;
+    if(!wx.getStorageSync('isPhone')) return
     that.mygroup();
     url = that.route;
-    // 查看是否授权
-    wx.getSetting({
+    wx.removeStorageSync("baseUrl");
+    //个人信息
+    wx.request({
+      url: 'https://s61.xboxes.cn/api/myInfo',
+      method: "get",
+      header: {
+        'content-type': 'application/json', // 默认值
+        'Accept': 'application/vnd.cowsms.v2+json',
+        'Authorization': 'Bearer ' + wx.getStorageSync("token"),
+      },
       success: function (res) {
-        // console.log(res)
-        if (res.authSetting['scope.userInfo']) {
-          wx.getUserInfo({
-            lang: "zh_CN",
-            success: function (res) {
-              if (!wx.getStorageSync("isPhone")) {
-                wx.navigateTo({
-                  url: '../login-frame/login-frame',
-                })
-              }
-              let userInfo = res.userInfo;
-              wx.removeStorageSync("baseUrl");
-              //个人信息
-              wx.request({
-                url: 'https://s61.xboxes.cn/api/myInfo',
-                method: "get",
-                header: {
-                  'content-type': 'application/json', // 默认值
-                  'Accept': 'application/vnd.cowsms.v2+json',
-                  'Authorization': 'Bearer ' + wx.getStorageSync("token"),
-                },
-                success: function (res) {
-                  console.log(res)
-                  //如果token失效   则返回新的token  
-                  if (res.header.Authorization) {
-                    var str = res.header.Authorization;
-                    // console.log(str)
-                    wx.removeStorageSync("token");
-                    wx.setStorageSync("token", str.substring(7, str.length))
-                  }
-                  if (res.statusCode == '200') {
-                    that.setData({
-                      nickName: res.data.nickname,
-                      avatar_url: res.data.avatarurl
-                    })
-                  }
-                }
-              })
-              that.LatticeInfo();
-            }
-          })
-        } else {
-          wx.setStorageSync("baseUrl", url);
-          wx.navigateTo({
-            url: '../login/login',
+        //如果token失效   则返回新的token  
+        if (res.header.Authorization) {
+          var str = res.header.Authorization;
+          // console.log(str)
+          wx.removeStorageSync("token");
+          wx.setStorageSync("token", str.substring(7, str.length))
+        }
+        if (res.statusCode == '200') {
+          that.setData({
+            nickName: res.data.nickname,
+            avatar_url: res.data.avatarurl
           })
         }
       }
     })
-
+    that.LatticeInfo();
+    // 查看是否授权
+  
   },
 
   /**

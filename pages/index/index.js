@@ -120,23 +120,8 @@ Page({
       pwd: e.detail.value
     })
   },
-  onLoad: function (options) {
+  onLoad(options) {
     console.log('创建页面')
-    wx.getSetting({
-      success: function (res) {
-        if (!res.authSetting['scope.userInfo']) {
-          console.log(res)
-          console.log('未登录')
-          wx.showToast({
-            title: '未登录',
-            icon: 'none',
-            duration: 2000 //持续的时间
-          })
-        } else {
-          // console.log(res)
-        }
-      }
-    })
     let that = this;
 
     console.log(options)
@@ -215,6 +200,9 @@ Page({
       })
       this.scan_opan()
     }
+
+    if(!wx.getStorageSync('ids')) return
+
     // 获取柜子信息BoxInfo
     that.shareboxInfo(wx.getStorageSync('ids'))   //获取共享柜子信息
     // that.shareallboxdata()
@@ -549,6 +537,9 @@ Page({
     url = that.route;
     console.log(that.data.itcp)
 
+    if(wx.getStorageSync('isPhone')!='isPhone')  return
+    
+
     // // 查询当前柜子我的共享箱myShareBox
     // that.shareallboxdata(wx.getStorageSync('ids'))
     // that.sharestate(wx.getStorageSync('ids'))
@@ -590,29 +581,36 @@ Page({
       },
       success:(res)=> {
         console.log(res)
-        if(!res.data.orderId) {
-          showModel('提示','获取商品信息失败')
-          return
-        }
+       
         //type 1 信报箱 3 共享箱 4 售卖箱
         const { text:name,type,price,orderId } =  res.data;
         let tishi = null;
 
         if(type == 1){
           tishi = '是否绑定当前柜口'
+          this.setData({
+            tan:true,
+            contenttext:name
+          })
         }else if(type == 3){
           tishi = ''
         }else if(type == 4){
+           if(!orderId) {
+            showModel('提示','获取商品信息失败')
+            return
+          }
           tishi = '是否下单'
+          this.setData({
+            order: true,
+            good: {
+              name,
+              price,
+              orderId
+            }
+          })
         }
         this.setData({
-          order: true,
           tishi,
-          good: {
-            name,
-            price,
-            orderId
-          }
         })
       }
     })
@@ -865,6 +863,10 @@ Page({
     this.ModalChange = this.selectComponent("#change");
     this.ModalA = this.selectComponent("#modalA");
     this.ModalsureBtn = this.selectComponent("#sureBtn")
+    
+
+    if(wx.getStorageSync('isPhone')!='isPhone')  return
+
     this.LatticeInfo()
     // console.log(wx.getStorageSync('ids'))
     // that.shareboxInfo(wx.getStorageSync('ids'))
@@ -878,67 +880,35 @@ Page({
     // })
   },
   //开锁
-  openColck: function (e) {
+  async openColck (e) {
     console.log(e)
     var that = this;
     // 查看是否授权
-    wx.getSetting({
-      success: function (res) {
-        // console.log(res)
-        if (res.authSetting['scope.userInfo']) {
-          wx.getUserInfo({
-            lang: "zh_CN",
-            success(res){
-              if (!wx.getStorageSync("isPhone")) {
-                wx.navigateTo({
-                  url: '../login-frame/login-frame',
-                })
-              }
-              that.newopenbtn(wx.getStorageSync('boxid'))
-              // wx.request({
-              //   url: app.globalData.publicAdress + 'api/openBoxButton',
-              //   method: 'GET',
-              //   header: {
-              //     'content-type': 'application/json', // 默认值
-              //     'Accept': 'application/vnd.cowsms.v2+json',
-              //     'Authorization': 'Bearer ' + wx.getStorageSync("token"),
-              //   },
-              //   data: {
-              //     'box_cell_id': wx.getStorageSync('boxid')
-              //   },
-              //   success(res) {
-              //     console.log(res)
-              //     if (res.header.Authorization) {
-              //       var str = res.header.Authorization;
-              //       wx.removeStorageSync("token");
-              //       wx.setStorageSync("token", str.substring(7, str.length))
-              //     }
-              //     if (res.statusCode == 200) {
-              //       console.log(res.data)
-              //       let content = res.data.data.get_area_info.name + res.data.data.get_area_info.area_name + res.data.data.get_box_info.town + res.data.data.get_box_info.unit + res.data.data.roomNum
-              //       console.log(content)
-              //       that.setData({
-              //         // share_openusebox: content,
-              //         signature: res.data.signature,
-              //         share_box_cell_id: e.currentTarget.dataset.boxid,
-              //         timestamp: res.data.timestamp,
-              //         share_type: res.data.type
-              //       })
-              //       that.Modal.showModal();
-              //     }
-              //   }
-              // })
-            }
-          })
-        } else {
 
+    //没登陆
+    if(!wx.getStorageSync("isPhone")){
+      if(!wx.getStorageSync('wx_userInfo')){
+        await app.getUserProfile().then((res)=>{
+          
+          wx.navigateTo({
+            url: '../login-frame/login-frame',
+          }) 
+        }).catch(()=>{
           wx.setStorageSync("baseUrl", url);
           wx.navigateTo({
             url: '../login/login',
           })
-        }
-      }
-    })
+        })
+
+        return
+      }else{
+        wx.navigateTo({
+          url: '../login-frame/login-frame',
+        })
+      } 
+    }else{
+      that.newopenbtn(wx.getStorageSync('boxid'))
+    }
 
   },
   //创建
@@ -1119,98 +1089,99 @@ Page({
   // this.Modal.showModal();//显示
   // this.Modal.hideModal(); //隐藏
   //点击select
-  bindShowMsg() {
+  async bindShowMsg() {
     var that = this;
 
-    // 查看是否授权
-    wx.getSetting({
-      success: function (res) {
-        // console.log(res)
-        if (res.authSetting['scope.userInfo']) {
-          wx.getUserInfo({
-            lang: "zh_CN",
-            success: function (res) {
-              that.LatticeInfo()
-              if (!wx.getStorageSync("isPhone")) {
-                wx.navigateTo({
-                  url: '../login-frame/login-frame',
-                })
-              }
-              let userInfo = res.userInfo;
-              wx.removeStorageSync("baseUrl");
-              for (var i = 0; i < that.data.addressList.length; i++) {
-                that.data.remarkinfo[i] = true
-                if (wx.getStorageSync("selectName") == that.data.addressList[i].address) {
-
-                  that.data.remarkinfo[i] = false;
-                  that.setData({
-                    remarkinfo: that.data.remarkinfo,
-                    tihuoWay: wx.getStorageSync("selectName"),
-                    mainid: wx.getStorageSync("mainid"),
-                    initpswd: wx.getStorageSync('initpswd')
-                  })
-                } else if (wx.getStorageSync("selectName") == that.data.addressList[0].address) {
-                  that.data.remarkinfo[0] = false;
-                  that.setData({
-                    remarkinfo: that.data.remarkinfo,
-                    tihuoWay: wx.getStorageSync("selectName"),
-                    mainid: wx.getStorageSync("mainid"),
-                    initpswd: wx.getStorageSync('initpswd')
-                  })
-                }
-                if (!wx.getStorageSync("selectName")) {
-                  that.data.remarkinfo[0] = false;
-                  that.setData({
-                    remarkinfo: that.data.remarkinfo,
-                    tihuoWay: that.data.addressList[0].address,
-                    mainid: that.data.addressList[0].mainid,
-                    initpswd: wx.getStorageSync('initpswd')
-                  })
-                  wx.setStorageSync("selectName", that.data.tihuoWay);
-                  wx.setStorageSync("mainid", that.data.mainid);
-                  wx.setStorageSync("initpswd", that.data.initpswd)
-                }
-                if (wx.getStorageSync("boxid")) {
-                  that.setData({
-                    boxid: wx.getStorageSync("boxid")
-                  })
-                } else {
-                  that.setData({
-                    boxid: that.data.addressList[0].boxid
-                  })
-                  wx.setStorageSync("boxid", that.data.boxid)
-                }
-                if (wx.getStorageSync("mainid")) {
-                  that.setData({
-                    mainid: that.data.addressList[0].mainid,
-                    initpswd: that.data.addressList[0].initpswd
-                  })
-                }
-              }
-              // that.LatticeInfo();
-              that.setData({
-                imgSrc: "../../images/jiantou1.png",
-              })
-              //改变箭头颜色
-              if (that.data.select) {
-                that.setData({
-                  imgSrc: "../../images/jiantou1.png",
-                })
-              } else {
-                that.setData({
-                  imgSrc: "../../images/jiantou2.png",
-                })
-              }
-            }
-          })
-        } else {
+    //没登陆
+    if(!wx.getStorageSync("isPhone")){
+      if(!wx.getStorageSync('wx_userInfo')){
+        await app.getUserProfile().then((res)=>{
+          
+          wx.navigateTo({
+            url: '../login-frame/login-frame',
+          }) 
+        }).catch((err)=>{
+          console.log(err)
           wx.setStorageSync("baseUrl", url);
           wx.navigateTo({
             url: '../login/login',
           })
+        })
+
+        return
+      }else{
+        wx.navigateTo({
+          url: '../login-frame/login-frame',
+        })
+      } 
+    }else{
+      this.LatticeInfo()
+      wx.removeStorageSync("baseUrl");
+      for (var i = 0; i < that.data.addressList.length; i++) {
+        that.data.remarkinfo[i] = true
+        if (wx.getStorageSync("selectName") == that.data.addressList[i].address) {
+
+          that.data.remarkinfo[i] = false;
+          that.setData({
+            remarkinfo: that.data.remarkinfo,
+            tihuoWay: wx.getStorageSync("selectName"),
+            mainid: wx.getStorageSync("mainid"),
+            initpswd: wx.getStorageSync('initpswd')
+          })
+        } else if (wx.getStorageSync("selectName") == that.data.addressList[0].address) {
+          that.data.remarkinfo[0] = false;
+          that.setData({
+            remarkinfo: that.data.remarkinfo,
+            tihuoWay: wx.getStorageSync("selectName"),
+            mainid: wx.getStorageSync("mainid"),
+            initpswd: wx.getStorageSync('initpswd')
+          })
+        }
+        if (!wx.getStorageSync("selectName")) {
+          that.data.remarkinfo[0] = false;
+          that.setData({
+            remarkinfo: that.data.remarkinfo,
+            tihuoWay: that.data.addressList[0].address,
+            mainid: that.data.addressList[0].mainid,
+            initpswd: wx.getStorageSync('initpswd')
+          })
+          wx.setStorageSync("selectName", that.data.tihuoWay);
+          wx.setStorageSync("mainid", that.data.mainid);
+          wx.setStorageSync("initpswd", that.data.initpswd)
+        }
+        if (wx.getStorageSync("boxid")) {
+          that.setData({
+            boxid: wx.getStorageSync("boxid")
+          })
+        } else {
+          that.setData({
+            boxid: that.data.addressList[0].boxid
+          })
+          wx.setStorageSync("boxid", that.data.boxid)
+        }
+        if (wx.getStorageSync("mainid")) {
+          that.setData({
+            mainid: that.data.addressList[0].mainid,
+            initpswd: that.data.addressList[0].initpswd
+          })
         }
       }
-    })
+      // that.LatticeInfo();
+      that.setData({
+        imgSrc: "../../images/jiantou1.png",
+      })
+      //改变箭头颜色
+      if (that.data.select) {
+        that.setData({
+          imgSrc: "../../images/jiantou1.png",
+        })
+      } else {
+        that.setData({
+          imgSrc: "../../images/jiantou2.png",
+        })
+      }
+    }
+
     if (this.data.iconfram == false) {
       this.setData({
         iconfram: true
@@ -1307,85 +1278,83 @@ Page({
   shareinformation: function () {
     let that = this
   },
-  kuangbtn: function () {
+  async kuangbtn() {
     let that = this
-    wx.getSetting({
-      success: function (res) {
-        // console.log(res)
-        if (res.authSetting['scope.userInfo']) {
-          wx.getUserInfo({
-            lang: "zh_CN",
-            success: function (res) {
-              if (!wx.getStorageSync("isPhone")) {
-                wx.navigateTo({
-                  url: '../login-frame/login-frame',
-                })
-              }
-              if (that.data.tishi == '是否绑定当前柜口') {
-                console.log('是否绑定当前柜口')
-                wx.request({
-                  url: app.globalData.publicAdress + 'api/bindCell',
-                  method: "POST",
-                  header: {
-                    'content-type': 'application/json', // 默认值
-                    'Accept': 'application/vnd.cowsms.v2+json',
-                    'Authorization': 'Bearer ' + wx.getStorageSync("token"),
-                  },
-                  data: {
-                    box_cell_id: that.data._boxid,
-                    ver: that.data._ver
-                  },
-                  success(res) {
-                    // console.log(res)
-                    that.setData({
-                      tan: false,
-                      tishi: null,
-                      contenttext: null
-                    })
-                    wx.showToast({
-                      title: res.data.mes,
-                      icon: 'none',
-                      duration: 2000
-                    })
-                  },
-                  error: function (res) {
-                    wx.showToast({
-                      title: res.data.mes,
-                      icon: 'none',
-                      duration: 2000
-                    })
-                  }
-                })
-              } else if (that.data.tishi = '您当前所扫柜子为') {
-                console.log('当前小区')
-                that.setData({
-                  tan: false,
-                  tishi: null,
-                  contenttext: null
-                })
-              } else if (that.data.tishi = '【温馨提示】') {
-                console.log('温馨提示')
-                that.setData({
-                  tan: false,
-                  tishi: null,
-                  contenttext: null
-                })
-              }
 
-            }
-          })
-        } else {
+    if(!wx.getStorageSync("isPhone")){
+      if(!wx.getStorageSync('wx_userInfo')){
+        await app.getUserProfile().then((res)=>{
+          
+          wx.navigateTo({
+            url: '../login-frame/login-frame',
+          }) 
+        }).catch((err)=>{
+          console.log(err)
           wx.setStorageSync("baseUrl", url);
           wx.navigateTo({
             url: '../login/login',
           })
-        }
+        })
+
+        return
+      }else{
+        wx.navigateTo({
+          url: '../login-frame/login-frame',
+        })
+      } 
+    }else{
+      if (that.data.tishi == '是否绑定当前柜口') {
+        console.log('是否绑定当前柜口')
+        wx.request({
+          url: app.globalData.publicAdress + 'api/bindCell',
+          method: "POST",
+          header: {
+            'content-type': 'application/json', // 默认值
+            'Accept': 'application/vnd.cowsms.v2+json',
+            'Authorization': 'Bearer ' + wx.getStorageSync("token"),
+          },
+          data: {
+            box_cell_id: that.data._boxid,
+            ver: that.data._ver
+          },
+          success(res) {
+            // console.log(res)
+            that.setData({
+              tan: false,
+              tishi: null,
+              contenttext: null
+            })
+            wx.showToast({
+              title: res.data.mes,
+              icon: 'none',
+              duration: 2000
+            })
+             that.bindShowMsg()
+          },
+          error: function (res) {
+            wx.showToast({
+              title: res.data.mes,
+              icon: 'none',
+              duration: 2000
+            })
+          }
+        })
+      } else if (that.data.tishi = '您当前所扫柜子为') {
+        console.log('当前小区')
+        that.setData({
+          tan: false,
+          tishi: null,
+          contenttext: null
+        })
+      } else if (that.data.tishi = '【温馨提示】') {
+        console.log('温馨提示')
+        that.setData({
+          tan: false,
+          tishi: null,
+          contenttext: null
+        })
       }
-    })
-    // console.log(that.data._boxid)
-    // console.log(that.data._ver)
-
-
+    }
   },
   kuangbtnB: function () {
     this.setData({

@@ -326,7 +326,7 @@
 		</view>
 		<!-- 我的预约 -->
 		<!-- 共享箱和我的共享箱 -->
-		<view class="sharedbox flex row between margintop24">
+		<view class="sharedbox flex row between margintop24" style="display:none">
 			<!-- 共享箱 -->
 			<view class="sharedbox-all backgroundwhite" wx:if="{{shareCellNum != 0}}" bindtap="sharebox" data-share_id="{{}}">
 				<view class="sharedbox-all-title">共享箱</view>

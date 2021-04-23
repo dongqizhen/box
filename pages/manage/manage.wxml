@@ -56,8 +56,8 @@
 		</view>
 	</dialog>
 	<!--  -->
-	<view class="header">
-		<text class="name">{{nickName}}</text>
+	<view class="header" bindtap="login">
+		<text class="name">{{nickName || '点击登录'}}</text>
 		<view class="logo_view">
 			<image src="{{avatar_url}}" class="logo"></image>
 			<image src="../../images/huangguan.png" class="huangguan" wx:if="{{type == 1}}"></image>
