@@ -1,6 +1,12 @@
 <!--pages/phone-login/phone-login.wxml-->
-<view>
-  <view class="phonenumbermain">
+<view class="main-wrapper">
+  <van-nav-bar
+		title="登录"
+    left-arrow
+    bind:click-left="onClickLeft"
+  />
+  <view class="wrapper">
+      <view class="phonenumbermain">
     <view class="phonemain">
       <text>手机号码</text><input type="number" bindinput='getPhoneValue' value='{{phone}}' placeholder="请输入手机号码" />
       <button class='buttoncode' bindtap='getVerificationCode' disabled='{{disabled}}' >{{codename}}</button>
@@ -10,4 +16,6 @@
     </view>
   </view>
   <button class="logout green" bindtap="login">确认登录</button>
+  </view>
+
 </view>

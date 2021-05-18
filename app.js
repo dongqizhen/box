@@ -12,6 +12,9 @@ App({
 
   onLaunch() {
 
+    var sysinfo = wx.getSystemInfoSync();
+    this.globalData.statusBarHeight =sysinfo.statusBarHeight 
+
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
@@ -165,12 +168,37 @@ App({
     };
   },
 
+  // 设置监听器
+watch: function (ctx, obj) {
+  Object.keys(obj).forEach(key => {
+    this.observer(ctx.data, key, ctx.data[key], function (value) {
+      obj[key].call(ctx, value)
+    })
+  })
+},
+// 监听属性，并执行监听函数
+observer: function (data, key, val, fn) {
+  Object.defineProperty(data, key, {
+    configurable: true,
+    enumerable: true,
+    get: function () {
+      return val
+    },
+    set: function (newVal) {
+      if (newVal === val) return
+      fn && fn(newVal)
+      val = newVal
+    },
+  })
+},
+
   getUserProfile () {
     // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
     return new Promise((resolve,reject)=>{
       wx.getSetting({
         success:(res)=>{
-          if (res.authSetting['scope.userInfo']) {
+          console.log(res)
+          //if (res.authSetting['scope.userInfo']) {
             wx.getUserProfile({
               desc: '用于显示用户资料',
               success: (res) => {
@@ -187,9 +215,12 @@ App({
                   this.userInfoReadyCallback(res)
                 }
                 resolve(res)
+              },
+              fail:()=>{
+
               }
             })
-          }
+          //}
         },
         fail:(err)=>{
           reject(err)

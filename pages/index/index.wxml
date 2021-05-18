@@ -1,6 +1,18 @@
 <!--index.wxml-->
-<view class="{{itcp?'backgroundno':'backgroundwhite'}}" style="height:100%">
+<view class="{{itcp?'backgroundno':'backgroundwhite'}} main-wrapper" style="height:100%;display:flex">
+	<van-nav-bar
+		title="我的信箱"
+		z-index="1000"
+	/>
 
+	<view class="wrapper">
+		<view class="swiper-wrapper">
+			<swiper autoplay="{{true}}" circular="{{true}}" wx:if="{{banner_list.length}}">
+				<swiper-item item-id="{{item.good_id}}" bindtap="swiperClick" wx:for="{{banner_list}}" data-id="{{item.good_id}}">
+					<image src="{{'https://s61.xboxes.cn/storage/' + item.img }}"></image>
+				</swiper-item>
+			</swiper>
+		</view>
 
 
 	<view class="content grow {{itcp?'backgroundno':'backgroundwhite'}}">
@@ -40,7 +52,7 @@
 				<view class="kuang-text" style="padding:46rpx 0;"> <text>{{tishi}}</text> <text>{{contenttext}}</text></view>
 				<view class="kuang-btn" style="padding: 20rpx 46rpx 40rpx 46rpx;box-sizing: border-box;">
 					<view bindtap="sharekuangbtnB">取消</view>
-					<view style="color: #FC6E22;" bindtap="sharekuangbtn">确认</view>
+					<view style="color: #00754B;" bindtap="sharekuangbtn">确认</view>
 				</view>
 			</view>
 		</view>
@@ -51,7 +63,8 @@
 				<view class="kuang-text" style="padding:46rpx 0;"> <text>{{tishi}}</text> <text>{{contenttext}}</text></view>
 				<view class="kuang-btn" style="padding: 20rpx 46rpx 40rpx 46rpx;box-sizing: border-box;">
 					<view bindtap="kuangbtnB">取消</view>
-					<view style="color: #FC6E22;" bindtap="kuangbtn">确认</view>
+					<view  wx:if="{{canIUseGetUserProfile}}" style="color: #00754B;" bindtap="kuangbtn">确认</view>
+					<button wx:else style="color: #00754B;" open-type="getUserInfo" bindgetuserinfo="kuangbtn">确认</button>
 				</view>
 			</view>
 		</view>
@@ -61,7 +74,7 @@
 				<view class="kuang-text" style="padding:46rpx 0;"> <text>{{tishi}}</text> <text>商品名称：{{good.name}}</text><text>商品价格：{{good.price}}元</text></view>
 				<view class="kuang-btn" style="padding: 20rpx 46rpx 40rpx 46rpx;box-sizing: border-box;">
 					<view bindtap="close_oreder_dialog">取消</view>
-					<view style="color: #FC6E22;" bindtap="orderNow">立即下单</view>
+					<view style="color: #00754B;" bindtap="orderNow">立即下单</view>
 				</view>
 			</view>
 		</view>
@@ -71,7 +84,7 @@
 				<view class="kuang-text" style="padding:46rpx 0;"> <text>{{tishi}}</text> <text></text><text style='margin-top:20rpx'>{{share_order_info.cost * 4}}元</text></view>
 				<view class="kuang-btn" style="padding: 20rpx 46rpx 40rpx 46rpx;box-sizing: border-box;">
 					<view bindtap="close_oreder_dialog">稍后再说</view>
-					<view style="color: #FC6E22;" bindtap="pay_share_order">支付</view>
+					<view style="color: #00754B;" bindtap="pay_share_order">支付</view>
 				</view>
 			</view>
 		</view>
@@ -84,7 +97,7 @@
 					class="fontsize30" bindinput="space_share" placeholder="请输入户号" value="{{value_roomNum}}"></input>
 				<view class="kuang-btn" style="padding:5rpx 46rpx 40rpx 46rpx;box-sizing:border-box">
 					<view bindtap="kuangbtnshareB">取消</view>
-					<view style="color: #FC6E22;" bindtap="kuangbtnshare">确认</view>
+					<view style="color: #00754B;" bindtap="kuangbtnshare">确认</view>
 				</view>
 				<view wx:if="{{share_vagule}}" class="kuang-vague">
 					<view wx:for="{{share_vagule_text}}" data-roomNum="{{item.roomNum}}" data-id="{{item.id}}"
@@ -101,7 +114,7 @@
 					class="fontsize30" bindinput="space_people" placeholder="请输入手机号" value="{{value_people}}"></input>
 				<view class="kuang-btn" style="padding:20rpx 46rpx 40rpx 46rpx;box-sizing:border-box">
 					<view bindtap="share_peopleB">取消</view>
-					<view style="color: #FC6E22;" bindtap="share_peopleaA">确认</view>
+					<view style="color: #00754B;" bindtap="share_peopleaA">确认</view>
 				</view>
 			</view>
 		</view>
@@ -115,7 +128,7 @@
 
 				<view class="kuang-btn " style="padding:20rpx 46rpx 40rpx 46rpx;box-sizing:border-box">
 					<view bindtap="keyboard_pwdB">取消</view>
-					<view style="color: #FC6E22;" bindtap="keyboard_pwdA">确认</view>
+					<view style="color: #00754B;" bindtap="keyboard_pwdA">确认</view>
 				</view>
 			</view>
 		</view>
@@ -127,7 +140,7 @@
 					{{share_openusebox}}</view>
 				<view class="kuang-btn" style="padding:20rpx 46rpx 40rpx 46rpx;box-sizing:border-box">
 					<view bindtap="share_openusebox_cancel">取消</view>
-					<view style="color: #FC6E22;" bindtap="share_openusebox_confirm">确认</view>
+					<view style="color: #00754B;" bindtap="share_openusebox_confirm">确认</view>
 				</view>
 			</view>
 		</view>
@@ -139,7 +152,7 @@
 					{{footer_password}}</view>
 				<view class="kuang-btn" style="padding:20rpx 46rpx 40rpx 46rpx;box-sizing:border-box">
 					<view bindtap="share_openusebox_cancel">取消</view>
-					<view style="color: #FC6E22;" bindtap="footer_password_ok">确认</view>
+					<view style="color: #00754B;" bindtap="footer_password_ok">确认</view>
 				</view>
 			</view>
 		</view>
@@ -151,7 +164,7 @@
 				</view>
 				<view class="kuang-btn flex justifycenter" style="padding:20rpx 46rpx 40rpx 46rpx;box-sizing:border-box">
 					<!-- <view bindtap="share_openusebox_cancel">取消</view> -->
-					<view style="color: #FC6E22;" style="padding:30rpx 50rpx;" bindtap="share_openusebox_cel">
+					<view style="color: #00754B;" style="padding:30rpx 50rpx;" bindtap="share_openusebox_cel">
 						我已关箱{{daojishi}}
 					</view>
 				</view>
@@ -162,11 +175,13 @@
 		</view>
 		<!-- 你是否关闭当前箱子 -->
 		<!--  -->
-		<view class="list-msg {{itcp?'backgroundno':'backgroundwhite'}}">
+		
+		<view class="content-list">
+			<view class="list-msg">
 			<!--下拉框  -->
-			<view class="list-msg2" bindtap='bindShowMsg'>
+			<view wx:if="{{canIUseGetUserProfile}}" class="list-msg2" bindtap='bindShowMsg'>
 				<text>{{tihuoWay}}</text>
-				<image style='height:20rpx;width:20rpx;' src='{{imgSrc}}' bindtap="icontram"></image>
+				<image style='height:7px;width:14px;' src='{{imgSrc}}' bindtap="icontram"></image>
 			</view>
 			<!-- 下拉需要显示的列表 -->
 			<view class="select_box" wx:if="{{iconfram}}">
@@ -181,24 +196,33 @@
 		</view>
 		<!--  -->
 		<view class="list" wx:if="{{existence}}">
-			<view style="display:inline-block">
-				<view>
-					<image src="../../images/keyImg.png" class="keyImg"></image>
-					<text class="keyKext">密码开箱（长效）</text>
+			<view class="clock-wrapper">
+				<!-- 开锁图片 -->
+				<view wx:if="{{canIUseGetUserProfile}}" class="openColck" bindtap="openColck" data-IotId="{{item.IotId}}" data-cellNum="{{item.cellNum}}"
+					data-boxid="{{item.box_cell_id}}">
+					<image class="" style="width:77rpx;height:79rpx;" src="/images/buleyao.png"></image>
 				</view>
+				<text class="room">{{roomNum}}</text>
 			</view>
-			<!-- 私人柜子=口密码 -->
-			<view class="num">{{initpswd}}</view>
+
+			<view class="open-wrapper">
+				<view>
+					<!-- <image src="../../images/keyImg.png" class="keyImg"></image> -->
+					<text class="keyKext">密码开箱（长效）</text>
+						<!-- 私人柜子=口密码 -->
+					<view class="num">{{initpswd}}</view>
+				</view>
+			
 			<!-- 创建变更密码 -->
 			<view wx:if="{{item.box_cell_id == boxid }}" class="list_right" wx:for="{{addressList}}"
 				data-IotId="{{item.IotId}}" data-cellnum="{{item.cellNum}}" data-boxid="{{item.box_cell_id}}" bindtap="change">
 				创建/变更</view>
-			<!-- 开锁图片 -->
-			<view class="openColck" bindtap="openColck" data-IotId="{{item.IotId}}" data-cellNum="{{item.cellNum}}"
-				data-boxid="{{item.box_cell_id}}">
-				<image class="" style="width:77rpx;height:79rpx;" src="/images/buleyao.png"></image>
 			</view>
+			
+			
 		</view>
+		</view>
+
 		<!-- 共享柜口 -->
 		<view wx:if="{{myshareju}}" class="cabinet">
 			<view class="sharebox" wx:for="{{waybilllist}}" wx:key="box_cell_id">
@@ -242,7 +266,7 @@
 						<view>
 							<text>开箱密码：</text>
 							<text class="fontweight"
-								style="padding-left:42rpx;font-size:28rpx;color:#fd7e32;">{{item.get_cell_info.tmp_pwd.passwd}}</text>
+								style="padding-left:42rpx;font-size:28rpx;color:#007548;">{{item.get_cell_info.tmp_pwd.passwd}}</text>
 							<image class="editbox" data-password="{{item.get_cell_info.tmp_pwd.passwd}}" bindtap="sharepass"
 								style="margin-left:172rpx;" src="../../images/copy.png"></image>
 						</view>
@@ -284,7 +308,7 @@
 								<text class="color999999 fontsize30">{{item.phone}}</text>
 							</view>
 						</view>
-						<image style="width:32rpx;height:32rpx;" src="/images/delete2.svg" data-phone="{{item.phone}}"
+						<image style="width:32rpx;height:32rpx;border-radius:0" src="/images/delete3.png" data-phone="{{item.phone}}"
 							data-share_id="{{item.share_id}}" bindtap="deleteuserinfo"></image>
 					</view>
 					<!-- 用户成员 -->
@@ -360,16 +384,31 @@
 		<image src="../../images/bg.png" class="bg_bottom"></image>
 		<!-- <image class="openColck" src="../../images/yuechi.png" wx:if="{{addressList == ''}}"></image> -->
 		<!-- <image src="{{logo}}" class="oimg"></image> -->
-		<image class="scan" src="../../images/saoma.png" bindtap="getScancode"></image>
+		<image class="scan" src="../../images/saoma1.png" bindtap="getScancode"></image>
 		<!-- 底部键盘按钮 -->
-		<image wx:if="{{itcp}}" class="jianpan" src="../../images/icon.png" bindtap="jianpan"></image>
-		<view wx:else class="jianpan jianpancss flex aligncenter justifycenter"
+		<!-- <image wx:if="{{itcp}}" class="jianpan" src="../../images/icon.png" bindtap="jianpan"></image> -->
+		<view class="jianpan {{itcp?'active':''}} jianpancss flex aligncenter justifycenter"
 			style="position: absolute;bottom: 165rpx;left: 50%;width: 210rpx;height: 210rpx;margin-left: -105rpx;"
-			bindtap="nosao">
-			<image style="width: 114rpx;height: 94rpx;" src="/images/shuzi.png"></image>
+		>
+			<image wx:if="{{itcp}}" bindtap="jianpan" style="width: 114rpx;height: 94rpx;" src="/images/shuzi.png"></image>
+			<image wx:else bindtap="nosao" style="width: 114rpx;height: 94rpx;" src="/images/shuzi.png"></image>
 		</view>
 	</view>
 	<!-- <button bindtap="diantoken">点击token改错</button> -->
+	</view>
+	
+	<view class="ad" wx:if="{{showAd}}" >
+		<view>
+			<span bindtap="closeAd">
+				<image src="../../images/guanbi.png"></image>
+			</span>
+			<image src="{{'https://s61.xboxes.cn/storage/' + ad_list.img }}" data-id="{{ad_list.good_id}}" bindtap="swiperClick"></image>
+			<span class="time">
+				{{time}}秒后关闭
+			</span>
+		</view>
+
+	</view>
 
 
 </view>

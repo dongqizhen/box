@@ -9,7 +9,7 @@ page {
   display: flex;
   flex-direction: column;
   height: 100vh;
-
+  position: relative;
 }
 
 .grow {
@@ -18,9 +18,40 @@ page {
   flex-grow: 1;
 }
 
+.swiper-wrapper{
+  height: 347rpx;
+}
+
+swiper{
+  height: 347rpx;
+}
+
+swiper image{
+  height: 100%;
+  width: 100%;
+}
+
 .content {
-  padding: 40rpx 40rpx 500rpx 40rpx;
+  padding: 0rpx 40rpx 500rpx 40rpx;
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+.content-list{
+  position: relative;
+  z-index: 11;
+  width: 99.5%;
+  height: 344rpx;
+  background: #FFFCD9;
+  border-radius: 9rpx;
+  /* border: 2rpx solid #000000; */
+  box-shadow:8rpx 8rpx 10rpx 0px rgba(0, 0, 0, 0.3); 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 26rpx;
+  margin-top: -45rpx;
 }
 
 .list-msg {
@@ -29,33 +60,43 @@ page {
   /* box-shadow:0px 10rpx 35rpx 0px rgba(0, 0, 0, 0.1); */
   /* border-radius:44rpx; */
   position: relative;
-  height: 88rpx;
+  height: 52rpx;
+
   /* height: 200rpx; */
+  display: flex;
+  justify-content: center;
+  width: 600rpx;
+
 }
 
 .list-msg1 {
-  height: 88rpx;
+  height: 52rpx;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: transparent;
 }
 
 .list-msg .list-msg2 {
-  height: 88rpx;
-  padding-left: 40rpx;
+  height: 52rpx;
+
+  background: #161616;
+  padding:0 25rpx;
   padding-right: 37rpx;
   /* line-height: 88rpx; */
-  background: rgba(238, 238, 238, 1);
   border-radius: 44rpx;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: absolute;
+  /* position: absolute; */
   z-index: 99;
   left: 0;
   width: 88%;
-  font-size: 24rpx;
-  color: #525252
+  font-size: 20rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #FFFFFF;
+  line-height: 24rpx;
 }
 
 .select_box {
@@ -74,7 +115,7 @@ page {
   /* border-bottom-left-radius:44rpx;
     border-bottom-right-radius:44rpx */
   border-radius: 44rpx;
-  top: 44rpx
+  top:10rpx
 }
 
 @keyframes myfirst {
@@ -94,6 +135,7 @@ page {
   font-size: 24rpx;
   padding-bottom: 29rpx;
   position: relative;
+  padding-right: 44rpx;
 }
 
 /* .select_one:first-child {
@@ -137,32 +179,53 @@ page {
 .openColck {
   width: 175rpx;
   height: 175rpx;
-  position: absolute;
+  /* position: absolute; */
   top: 50%;
   right: 30rpx;
-  margin-top: -87.5rpx;
-  background-color: rgba(60, 180, 236, 1);
+  background: #fff;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0);
+  border: 1px solid #6D6D6D;
   border-radius: 50%;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  box-shadow: 0rpx 10rpx 40rpx #c2ddf7;
+  /* box-shadow: 0rpx 10rpx 40rpx #c2ddf7; */
+}
+
+.clock-wrapper{
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  align-items: center;
+}
+.open-wrapper{
+  margin-left: 165rpx;
+  padding-top: 70rpx;
+}
+.room{
+  font-size: 62rpx;
+  font-family: Charter-Black, Charter;
+  font-weight: 900;
+  color: #141414;
+  line-height: 76rpx;
+
 }
 
 .list {
-  padding-top: 40rpx;
-  padding-bottom: 40rpx;
-  padding-left: 40rpx;
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 10rpx 35rpx 0px rgba(0, 0, 0, 0.1);
+  /* padding-top: 40rpx; */
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  margin-top: 25rpx;
+  padding-left: 60rpx;
+  /* background: rgba(255, 255, 255, 1); */
+  /* box-shadow: 0px 10rpx 35rpx 0px rgba(0, 0, 0, 0.1); */
   border-radius: 20rpx;
-  margin-top: 81rpx;
+  /* margin-top: 110rpx; */
   /* margin-left: 24rpx;
   margin-right: 24rpx; */
-  position: relative
+  /* position: relative */
 }
 
 .keyImg {
@@ -173,41 +236,34 @@ page {
 }
 
 .keyKext {
-  font-size: 30rpx;
+  font-size: 19rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  color: rgba(153, 153, 153, 1);
-  padding-left: 18rpx;
+  color: #161616;
+  line-height: 26rpx;
+
 }
 
 .num {
-  color: #333333;
-  font-size: 48rpx;
-  font-weight: 400;
-  padding-top: 33rpx;
+  font-size: 28rpx;
+  font-family: Helvetica;
+  color: #161616;
+  line-height: 35rpx;
 }
 
 .list_right {
-  /* position: absolute; */
-  font-size: 30rpx;
-  color: #fff;
-  font-weight: 400;
-  line-height: 63rpx;
-  /* right: 0; */
-  /* top: 50%; */
-  /* margin-top: -30rpx; */
-  /* padding-left: 27rpx;
-  padding-right: 19rpx; */
-  /* border-top-left-radius: 30rpx;
-  border-bottom-left-radius: 30rpx;
-  background: linear-gradient(119deg, rgba(252, 219, 34, 0.8), rgba(252, 110, 34, 0.8)); */
-  width: 221rpx;
-  height: 63rpx;
-
-  background-color: #3cb4ec;
-  text-align: center;
-  border-radius: 16rpx;
-  margin-top: 30rpx;
-
+  width: 188rpx;
+height: 55rpx;
+background: #00754B;
+border-radius: 9rpx;
+font-size: 21rpx;
+font-family: PingFangSC-Regular, PingFang SC;
+font-weight: 400;
+display: flex;
+align-items: center;
+justify-content: center;
+color: #FFFFFF;
+margin-top: 12rpx;
 }
 
 .oimg {
@@ -219,11 +275,11 @@ page {
 }
 
 .scan {
-  width: 170rpx;
-  height: 170rpx;
+  width: 100rpx;
+  height: 100rpx;
   position: absolute;
-  right: 86rpx;
-  bottom: 20rpx;
+  right: 138rpx;
+  bottom: 55rpx;
 
 }
 
@@ -277,6 +333,19 @@ page {
   background: rgba(238, 238, 238, 1);
   border-radius: 44rpx;
 }
+.kuang-btn>button{
+  padding: 0rpx 0rpx;
+  font-size: 30rpx;
+  height: 108rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* width: 80rpx !important; */
+  box-sizing: border-box !important;
+  width: 220rpx !important;
+  background: rgba(238, 238, 238, 1);
+  border-radius: 44rpx;
+}
 
 /* 底部键盘 */
 .jianpan {
@@ -292,9 +361,14 @@ page {
   background: #e9e9e9;
   border-radius: 50%;
 }
+.jianpancss.active {
+  background:#00754B;
+}
 
 .cabinet {
   margin-top: 20rpx;
+  display: flex;
+  width: 100%;
 }
 
 .sharebox {
@@ -308,7 +382,7 @@ page {
   /* text-align: center; */
   box-shadow: 3px 5px 6px 0px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(255, 255, 255, 0);
-  padding: 30rpx 86rpx 50rpx 40rpx;
+  padding: 30rpx 40rpx 50rpx 40rpx;
   box-sizing: border-box;
   position: relative;
   margin-bottom: 20rpx;
@@ -521,4 +595,49 @@ page {
 .kuang-box-close>image{
   width: 56rpx;
   height: 56rpx;
+}
+
+.ad{
+  position: fixed;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.78);
+
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.ad view{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ad view>span:not(.time){
+  display: flex;
+  height: 45rpx;
+  width: 45rpx;
+  margin-bottom: 20rpx;
+}
+
+.ad view>span image{
+  width: 100%;
+  height: 100%;
+}
+
+.ad view>image{
+  width: 460rpx;
+  height: 626rpx;
+}
+
+.ad view .time{
+  font-size: 26rpx;
+  font-family: Helvetica;
+  color: #FFFFFF;
+  margin-top: 14rpx;
+  display: flex;
+  width: 100%;
 }

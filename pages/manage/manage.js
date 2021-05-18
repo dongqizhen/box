@@ -46,7 +46,8 @@ Page({
     pwd2: "", //临时密码2
     pwdnum: "", //传给后台的  临时密码值    1    2   
     cardphone: "", //绑卡成员手机号
-    cardtype: null
+    cardtype: null,
+    canIUseGetUserProfile:false
   },
 
   /**
@@ -54,6 +55,12 @@ Page({
    */
   onLoad: function (options) {
     var that = this;
+
+    if (wx.getUserProfile) {
+      this.setData({
+         canIUseGetUserProfile: true
+      })
+    }
 
     // console.log(wx.getStorageSync('boxid'))
   },
@@ -205,14 +212,25 @@ Page({
     this.ModalChange.showModal();
   },
 
-  login(){
-    this.verify()
+  login(e = {}){
+    this.verify(e)
   },
 
   //验证登陆
- async verify(){
+ async verify(e = {}){
     if(!wx.getStorageSync('isPhone')){
       if(!wx.getStorageSync('wx_userInfo')){
+        if(e.detail && e.detail.userInfo){
+          const {userInfo} = e.detail    
+          app.globalData.userInfo = userInfo
+          wx.setStorageSync('wx_userInfo', userInfo)
+          // this.globalData.wx_userInfo = userInfo
+          app.globalData.profile_user = e.detail
+          wx.navigateTo({
+            url: '../login-frame/login-frame',
+          })
+          return
+        }
         await app.getUserProfile().then((res)=>{
           wx.navigateTo({
             url: '../login-frame/login-frame',

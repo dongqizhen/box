@@ -1,5 +1,12 @@
 <!--pages/manage/manage.wxml-->
-<view class="content" bindtap="contentbox">
+<view class="content main-wrapper" bindtap="contentbox">
+	<van-nav-bar
+		title="管理"
+	/>
+
+	<view class="wrapper">
+
+	
 	<!-- 添加成员 -->
 	<dialog1 id="modal" cancelText="取消" confirmText="确认添加" bind:cancelEvent="_cancelEvent" bind:confirmEvent="_confirmEventFirst">
 
@@ -56,13 +63,14 @@
 		</view>
 	</dialog>
 	<!--  -->
-	<view class="header" bindtap="login">
-		<text class="name">{{nickName || '点击登录'}}</text>
-		<view class="logo_view">
+	<view class="header">
+		<text bindtap="login" class="name" wx:if="{{canIUseGetUserProfile}}">{{nickName || '点击登录'}}</text>
+		<button class="name"  wx:else open-type="getUserInfo" bindgetuserinfo="login">点击登录</button>
+		<div class="logo_view" bindtap="login">
 			<image src="{{avatar_url}}" class="logo"></image>
 			<image src="../../images/huangguan.png" class="huangguan" wx:if="{{type == 1}}"></image>
 			<text class="nonOwner" wx:elif="{{type == 2}}">非房主</text>
-		</view>
+		</div>
 	</view>
 	<!--  -->
 	<view class="con_list">
@@ -150,7 +158,7 @@
 				<view class="pwd_num" wx:else>请先创建</view>
 				<view class="pwd_btn">
 					<button bindtap="temporary" data-type="1">创建/变更</button>
-					<button bindtap="deleteTemporary" data-type="1">删除</button>
+					<button  bindtap="deleteTemporary" data-type="1">删除</button>
 				</view>
 
 			</view>
@@ -169,4 +177,5 @@
 
 	<!--  -->
 	<view style="height:80rpx;"></view>
+</view>
 </view>

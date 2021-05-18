@@ -22,6 +22,11 @@ Page({
       collected: e.target.dataset.num
     })
   },
+  onClickLeft(){
+    wx.navigateBack({
+      delta: 0,
+    })
+  },
   phonelogin: function () {
     wx.redirectTo({
       url: '../phone-login/phone-login'
@@ -88,7 +93,8 @@ Page({
     });
   },
   //微信快速登录
-  getPhoneNumber: function (e) {
+  getPhoneNumber (e) {
+    const that = this
     // console.log(e)
     if (e.detail.errMsg == "getPhoneNumber:ok") {
       wx.request({
@@ -201,6 +207,7 @@ Page({
               },
               success: function (res) {
                 console.log(res)
+               
                 //如果token失效   则返回新的token  
                 if (res.header.Authorization) {
                   var str = res.header.Authorization;

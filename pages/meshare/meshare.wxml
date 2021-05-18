@@ -1,5 +1,11 @@
 <!--pages/meshare/meshare.wxml-->
-<view class="box content">
+<view class="box content main-wrapper">
+	<van-nav-bar
+		title="我的共享箱"
+		left-arrow
+		bind:click-left="onClickLeft"
+	/>
+	<view class="wrapper">
 	<!-- 共享柜口 -->
 	<view wx:if="{{waybilllist}}" class="cabinet">
 		<view class="sharebox" wx:for="{{waybilllist}}" wx:key="*this">
@@ -141,4 +147,5 @@
 			<view style="color: #FC6E22;" bindtap="share_peopleaA">确认</view>
 		</view>
 	</view>
+</view>
 </view>

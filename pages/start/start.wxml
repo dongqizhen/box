@@ -1,0 +1,4 @@
+<!--pages/start/start.wxml-->
+<view class="container">
+  <image src="../../images/start.png"></image>
+</view>

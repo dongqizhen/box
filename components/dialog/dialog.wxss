@@ -119,13 +119,13 @@
   /* height:88rpx;
   line-height: 88rpx; */
   padding:30rpx 80rpx; 
-  color: #FC6E22;
+  color: #00754B;
   font-size: 30rpx;
   background:rgba(238,238,238,1);
   border-radius:44rpx;
     /* border-right: 1px solid #eee; */
 }
 .btn-primary{
-  color: #FC6E22;
+  color: #00754B;
   margin-left: 60rpx;
 }

@@ -7,7 +7,35 @@ page {
   font-weight: 400;
   background: rgba(246, 248, 250, 1);
   color: #333333;
-  overflow-x: hidden;
+  overflow: hidden;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+}
+
+
+
+van-nav-bar{
+  width: 100%;
+}
+
+.van-icon-arrow-left:before{
+  color: #000;
+}
+
+.main-wrapper{
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+}
+
+.wrapper{
+  width: 100%;
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+  box-sizing: border-box;
 }
 
 .container {
@@ -16,7 +44,7 @@ page {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 200rpx 0;
+  padding: 46px 0 0;
   box-sizing: border-box;
 }
 
@@ -527,7 +555,7 @@ image.img {
 
 /* 字体颜色 */
 .colorfc6e22 {
-  color: #fc6e22;
+  color: #00754B;
 }
 
 .color999999 {

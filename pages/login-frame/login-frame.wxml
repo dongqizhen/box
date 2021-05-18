@@ -1,5 +1,11 @@
 <!--登录弹框-->
-<view>
+<view class="main-wrapper">
+  <van-nav-bar
+		title="手机号登录"
+    left-arrow
+    bind:click-left="onClickLeft"
+  />
+  <view class="wrapper">
   <view class="toplogo">
     <image src="{{avatar_url}}"></image>
   </view>
@@ -10,4 +16,5 @@
     </view>
     <view bindtap="nonelogin"><text class="no-login">暂不登录</text></view>
   </view>
+</view>
 </view>

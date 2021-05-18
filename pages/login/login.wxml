@@ -1,5 +1,9 @@
 <!--login.wxml-->
 <view class="container">
+	<van-nav-bar
+		title="登录"
+    left-arrow
+	/>
 	<view class="userinfo">
 		<button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" class="yzlogin"> 微信授权登录 </button>
 		<block wx:else>

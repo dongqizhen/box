@@ -15,6 +15,11 @@ Page({
       phone: e.detail.value
     })
   },
+  onClickLeft(){
+    wx.navigateBack({
+      delta: 0,
+    })
+  },
   getCodeValue: function (e) {
     this.setData({
       code: e.detail.value

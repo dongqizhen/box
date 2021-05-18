@@ -1,0 +1,58 @@
+<view class="container main-wrapper">
+    <van-nav-bar
+		title="{{title}}"
+        left-arrow
+        custom-class="nav"
+        bind:click-left="onClickLeft"
+    />
+    <view class="wrapper"> 
+        <view class="swipercontent">
+            <swiper autoplay="{{false}}" circular="{{true}}" indicator-dots="{{false}}" bindchange="swiperChange">
+                <block wx:for="{{imgUrls}}" wx:key="index">
+                    <swiper-item>
+                        <image class="swiper-image" src="{{'https://s61.xboxes.cn/storage/' + item }}" />
+                    </swiper-item>
+                </block>
+            </swiper>
+            <view class="dots">
+                <block wx:for="{{imgUrls}}" wx:key="index">
+                    <view class="dot{{index == swiperCurrent ? ' active' : ''}}"></view>
+                </block>
+            </view>
+        </view>
+        
+        <view class="content">
+            <text class="title">{{detail.name}}</text>
+            <text class="s-title">{{detail.detail}}</text>
+            <view class="norm">
+                规格：
+                <text>{{detail.size}}</text>
+            </view>
+            <view class="market-price">
+                市场价：
+                <text>¥ {{detail.original_cost}}</text>
+            </view>
+            <view class="price">
+                业主价：
+                <text>¥ {{detail.cost}}</text>
+            </view>
+            <text class="note">
+                备注：{{detail.des}}
+            </text>
+            <text class="phone" bindtap="call">
+                咨询电话：{{detail.get_supplier_info.phone}}
+            </text>
+        </view>
+        <view class="bottom">
+            <view>
+                <view>购买数量：</view>
+                <input value="{{value}}" bindinput="input" type="number" bindblur="blur" />
+            </view>
+            
+            <button class="btn" loading="{{loading}}" disabled="{{disabled}}" bindtap="onTapBuy">
+                立即购买
+            </button>
+        </view>
+    </view>
+    
+</view>

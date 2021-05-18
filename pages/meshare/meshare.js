@@ -46,6 +46,11 @@ Page({
     that.shareallboxdata()
 
   },
+  onClickLeft() {
+    wx.navigateBack({
+      delta: 0,
+    })
+  },
   bindtapbox: function (e) {
     console.log(e.currentTarget.dataset.index)
     console.log(this)
