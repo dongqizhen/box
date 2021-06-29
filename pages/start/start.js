@@ -5,25 +5,32 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    box_id:'',
+    scene:''
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
-
+  onLoad (options) {
+    // options.scene = '3668%2Cbfea42a82c99e4d'
+    if(Reflect.ownKeys(options).length){
+      wx.setStorageSync('options', JSON.stringify(options))
+    }else{
+      wx.removeStorageSync('options')
+    }
+    setTimeout(()=>{      
+      wx.switchTab({
+        url: '../index/index',
+      })
+    },3000)
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady () {
-    setTimeout(()=>{
-      wx.switchTab({
-        url: '../index/index',
-      })
-    },3000)
+    
   },
 
   /**

@@ -7,7 +7,7 @@
     />
     <view class="wrapper"> 
         <view class="swipercontent">
-            <swiper autoplay="{{false}}" circular="{{true}}" indicator-dots="{{false}}" bindchange="swiperChange">
+            <swiper autoplay="{{true}}" circular="{{true}}" indicator-dots="{{false}}" bindchange="swiperChange">
                 <block wx:for="{{imgUrls}}" wx:key="index">
                     <swiper-item>
                         <image class="swiper-image" src="{{'https://s61.xboxes.cn/storage/' + item }}" />

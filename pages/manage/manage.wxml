@@ -152,9 +152,9 @@
 	<view class="con_list" style="padding-left:43rpx;padding-right:28rpx;margin-bottom:74rpx;">
 		<view class="pwd_view">
 			<image src="../../images/keyImg.png" class="keyImg"></image>
-			<text class="pwd_text">密码开箱（临时）</text>
+			<text class="pwd_text">临时密码（使⽤⼀次失效，单击复制）</text>
 			<view class="pwdstyle">
-				<view class="pwd_num" wx:if="{{pwd1}}">{{pwd1}}</view>
+				<view class="pwd_num" bindtap="setClipboardData" wx:if="{{pwd1}}">{{pwd1}}</view>
 				<view class="pwd_num" wx:else>请先创建</view>
 				<view class="pwd_btn">
 					<button bindtap="temporary" data-type="1">创建/变更</button>
@@ -163,7 +163,7 @@
 
 			</view>
 			<view class="pwdstyle">
-				<view class="pwd_num" wx:if="{{pwd2}}">{{pwd2}}</view>
+				<view class="pwd_num" bindtap="setClipboardData2" wx:if="{{pwd2}}">{{pwd2}}</view>
 				<view class="pwd_num" wx:else>请先创建</view>
 				<view class="pwd_btn">
 					<button bindtap="temporary" data-type="2">创建/变更</button>

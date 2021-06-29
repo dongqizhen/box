@@ -68,7 +68,12 @@ Page({
     }
   },
   onShow:function(){
-    
+
+  },
+   onClickLeft(){
+    wx.navigateBack({
+      delta: 0,
+    })
   },
   getUserInfo: function (e) {
     // console.log(e)
@@ -83,12 +88,12 @@ Page({
       wx.navigateTo({
         url: '../login-frame/login-frame',
       })
-      
-      
+
+
       // wx.switchTab({
       //   url: '../index/index'
       // })
-     
+
     } else {
       console.log("点击了拒绝授权");
       wx.switchTab({
@@ -102,4 +107,3 @@ Page({
     })
   }
 })
-  

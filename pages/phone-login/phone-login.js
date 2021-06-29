@@ -107,6 +107,7 @@ Page({
   },
   //提交表单信息
   login: function () {
+    let that = this
     var myreg = /^(14[0-9]|13[0-9]|15[0-9]|17[0-9]|18[0-9])\d{8}$$/;
     if (this.data.phone == "") {
       wx.showToast({
@@ -207,7 +208,7 @@ Page({
         }
       })
       
-      const {signature,rawData,iv,encryptedData} = app.globalData.profile_user
+      const {signature='',rawData,iv,encryptedData} = app.globalData.profile_user
       wx.request({
         url: app.globalData.publicAdress + 'api/register',
         method: "post",

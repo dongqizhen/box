@@ -33,6 +33,7 @@ Page({
         statusBarHeight:'',
         topic: "", //二维码携带的参数
         // select: true,
+        current:0, //轮播的当前下标
         tihuoWay: "",
         time:3,
         showAd:false,
@@ -109,6 +110,7 @@ Page({
         },
         // 我的预约
         subscribe: null,
+        selectIndex:null,//显示地址下标
         // 当前柜子得共享箱
         sharebox: 0,
         share_openusebox: false, //开箱按钮弹出
@@ -160,11 +162,15 @@ Page({
                     }
                 }else{
                     this.setData({
-                        banner_list:[...data]
+                        banner_list:[]
+                    })
+                    this.setData({
+                        banner_list:[...data],
+                        current:0
                     })
                 }
 
-                console.log(this.data.banner_list)
+                console.log(this.data.current)
                 // if(data.length){
                 //     if(type == 1){
                         
@@ -189,16 +195,16 @@ Page({
         console.log("创建页面",app);
         const {statusBarHeight} = app.globalData
         let that = this;
-
+       
         that.setData({
             statusBarHeight 
         })
         app.watch(this, {
             tihuoWay: (newVal) => {
-                console.log(newVal);
-                this.setData({
-                    roomNum: newVal.split("单元")[1],
-                });
+                console.log(newVal,that.data.addressList);
+                // this.setData({
+                //     roomNum: newVal.split("单元")[1],
+                // });
             },
             showAd:(newVal)=>{
                 if(newVal){
@@ -235,9 +241,13 @@ Page({
             });
         }
 
-        console.log(options);
+        console.log(options,1111);
+        //解决微信直接扫码问题
+        if(!Reflect.ownKeys(options).length){
+            options = wx.getStorageSync('options')
+        }
         // 扫柜子码进入
-        if (options.box_id) {
+        if (options.box_id ) {
             // that.setData({
             //   boxid: options.box_id
             // })
@@ -307,8 +317,10 @@ Page({
             });
             // that.saogui(options.box_id)
         }
+        
         //扫格口码
         if (options.scene) {
+            console.log('options.scene',options.scene)
             let scene = decodeURIComponent(options.scene);
             console.log(scene);
             console.log(options);
@@ -429,12 +441,12 @@ Page({
                     wx.setStorageSync("token", str.substring(7, str.length));
                 }
                 if (res.statusCode == "200") {
-                    let content =
-                        res.data.data.get_area_info.name +
-                        res.data.data.get_area_info.area_name +
-                        res.data.data.town +
-                        res.data.data.unit;
-                    console.log(content);
+                    // let content =
+                    //     res.data.data.get_area_info.name +
+                    //     res.data.data.get_area_info.area_name +
+                    //     res.data.data.town +
+                    //     res.data.data.unit;
+                    // console.log(content);
                     that.setData({
                         area_id:res.data.data.area_id
                     })
@@ -459,7 +471,15 @@ Page({
         wx.scanCode({
             success: (res) => {
                 console.log(res);
+                if(!res.path) {
+                    wx.showToast({
+                      title: '无效二维码',
+                      icon:'none'
+                    })
+                    return
+                }
                 var url = res.path;
+                console.log(url)
                 var urls = decodeURIComponent(url);
                 var str = urls.indexOf(",");
                 if (str >= 0) {
@@ -637,6 +657,7 @@ Page({
                                 );
                                 wx.removeStorageSync("selectName");
                                 wx.setStorageSync("selectName", content);
+                                wx.setStorageSync('selectRoomNum', res.data[i].get_cell_info.roomNum)
                                 wx.removeStorageSync("ids");
                                 wx.setStorageSync(
                                     "ids",
@@ -653,7 +674,7 @@ Page({
                                     iotid: res.data[i].get_cell_info.IotId,
                                     cellnum: res.data[i].get_cell_info.cellNum,
                                     tihuoWay: content,
-
+                                    roomNum: res.data[i].get_cell_info.roomNum,
                                     initpswd:
                                         res.data[i].get_cell_info.initPswd,
                                 });
@@ -667,6 +688,7 @@ Page({
                                 console.log(res.data[i]);
                                 // wx.removeStorageSync('boxid')
                                 // wx.removeStorageSync('cellnum')
+                                //TODO
                                 wx.removeStorageSync("selectName");
                                 wx.setStorageSync("selectName", text);
                                 wx.removeStorageSync("ids");
@@ -795,14 +817,24 @@ Page({
                     wx.removeStorageSync("token");
                     wx.setStorageSync("token", str.substring(7, str.length));
                 }
+                let content = ''
                 if (res.statusCode == "200") {
-                    let content =
-                        res.data.data.get_area_info.name +
-                        res.data.data.get_area_info.area_name +
-                        res.data.data.town +
-                        res.data.data.unit;
+                    const re = res.data.data
+                    if(re != null) {
+                        if(!Reflect.ownKeys(re.get_area_info).length){
+                            content = ''
+                        }else{
+                            content =
+                            re.get_area_info?.name +
+                            re.get_area_info?.area_name +
+                            re.town +
+                            re.unit;
+                        }
+                    }
+                    
+                     
                         that.setData({
-                            area_id:res.data.data.area_id
+                            area_id:re.area_id
                         })
                     console.log(content);
                     // that.saogui(wx.getStorageSync('ids'), content)
@@ -875,6 +907,7 @@ Page({
                                 box_cell_id: res.data[i].box_cell_id,
                                 // 'roomNum':res.data[i].get_cell_info.roomNum,
                                 initPswd: res.data[i].get_cell_info.initPswd,
+                                roomNum: res.data[i].get_cell_info.roomNum
                             };
                             addressList.push(formdata);
 
@@ -909,6 +942,10 @@ Page({
                             wx.setStorageSync(
                                 "selectName",
                                 addressList[0].address
+                            );
+                            wx.setStorageSync(
+                                "selectRoomNum",
+                                addressList[0].roomNum
                             );
                             wx.removeStorageSync("initpswd");
                             wx.setStorageSync(
@@ -947,6 +984,7 @@ Page({
                         that.setData({
                             addressList: addressList,
                             tihuoWay: wx.getStorageSync("selectName"),
+                            roomNum:wx.getStorageSync('selectRoomNum')
                         });
                     }
                 }
@@ -1290,6 +1328,15 @@ Page({
     _cancelEventChange: function () {
         console.log("点击取消!");
     },
+    //复制
+    setClipboardData(){
+        wx.setClipboardData({
+            data: this.data.initpswd,
+            success (res) {
+              
+            }
+          })
+    },
     // this.Modal.showModal();//显示
     // this.Modal.hideModal(); //隐藏
     //点击select
@@ -1348,15 +1395,19 @@ Page({
                         initpswd: wx.getStorageSync("initpswd"),
                     });
                 }
+
+                //没有select
                 if (!wx.getStorageSync("selectName")) {
                     that.data.remarkinfo[0] = false;
                     that.setData({
                         remarkinfo: that.data.remarkinfo,
                         tihuoWay: that.data.addressList[0].address,
+                        roomNum:that.data.addressList[0].roomNum,
                         mainid: that.data.addressList[0].mainid,
                         initpswd: wx.getStorageSync("initpswd"),
                     });
                     wx.setStorageSync("selectName", that.data.tihuoWay);
+                    wx.setStorageSync("selectRoomNum", that.data.roomNum);
                     wx.setStorageSync("mainid", that.data.mainid);
                     wx.setStorageSync("initpswd", that.data.initpswd);
                 }
@@ -1410,6 +1461,7 @@ Page({
             saotext: true,
             existence: true,
             myshateapp: true,
+            current:0,
         });
         wx.removeStorageSync("saoma");
         var name = e.currentTarget.dataset.name;
@@ -1435,9 +1487,11 @@ Page({
             cellnum: cellnum,
             mainid: mainid,
             initpswd: initpswd,
+            roomNum: that.data.addressList[index].roomNum
         });
         wx.removeStorageSync("selectName");
         wx.setStorageSync("selectName", that.data.tihuoWay);
+        wx.setStorageSync("selectRoomNum", that.data.roomNum);
         wx.removeStorageSync("initpswd");
         wx.setStorageSync("initpswd", that.data.initpswd);
         wx.removeStorageSync("iotid");

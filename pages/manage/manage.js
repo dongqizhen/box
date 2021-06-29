@@ -187,6 +187,23 @@ Page({
       phoneNumber: e.detail.value
     })
   },
+  //复制
+  setClipboardData(){
+    wx.setClipboardData({
+        data: this.data.pwd1,
+        success (res) {
+          
+        }
+      })
+  },
+  setClipboardData2(){
+    wx.setClipboardData({
+        data: this.data.pwd2,
+        success (res) {
+          
+        }
+      })
+  },
   comment: function (e) {
     var that = this;
     that.setData({

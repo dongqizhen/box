@@ -14,15 +14,15 @@ App({
 
     var sysinfo = wx.getSystemInfoSync();
     this.globalData.statusBarHeight =sysinfo.statusBarHeight 
-
+   
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     // 
-    if (wx.getStorageSync("token")) {
-      //用户信息
-     this.getUserInfo()
-    } else {
+    // if (wx.getStorageSync("token")) {
+    //   //用户信息
+      
+    // } else {
       console.log('登录')
       // 登录
       wx.login({
@@ -34,11 +34,12 @@ App({
             data: {
               "code": res.code
             },
-            success: function (res) {
+            success: (res)=> {
               // wx.removeStorageSync("token");
               wx.setStorageSync("token", res.data.token)
               // wx.removeStorageSync("sessionId");
               wx.setStorageSync("sessionId", res.data.sessionId)
+              this.getUserInfo()
             },
             error: function (res) {
               // console.log(res)
@@ -47,7 +48,7 @@ App({
         },
       })
       // wx.setStorageSync('token', '222222222222')
-    }
+    //}
 
     //api/user/me
     // 获取用户信息

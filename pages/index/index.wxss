@@ -184,7 +184,7 @@ swiper image{
   right: 30rpx;
   background: #fff;
   text-align: center;
-  border: 1px solid #6D6D6D;
+  /* border: 1px solid #6D6D6D; */
   border-radius: 50%;
   display: flex;
   flex-direction: row;
@@ -201,7 +201,7 @@ swiper image{
 }
 .open-wrapper{
   margin-left: 165rpx;
-  padding-top: 70rpx;
+  padding-top: 50rpx;
 }
 .room{
   font-size: 62rpx;
@@ -236,19 +236,21 @@ swiper image{
 }
 
 .keyKext {
-  font-size: 19rpx;
+  font-size: 21rpx;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #161616;
-  line-height: 26rpx;
+  line-height: 30rpx;
 
 }
 
 .num {
-  font-size: 28rpx;
+  font-size: 42rpx;
   font-family: Helvetica;
   color: #161616;
-  line-height: 35rpx;
+  line-height: 40rpx;
+  margin-top: 10rpx;
+  margin-bottom: 30rpx;
 }
 
 .list_right {
@@ -290,7 +292,7 @@ margin-top: 12rpx;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 999;
+  z-index: 9999;
   background: rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
@@ -369,6 +371,7 @@ margin-top: 12rpx;
   margin-top: 20rpx;
   display: flex;
   width: 100%;
+  flex-direction: column;
 }
 
 .sharebox {

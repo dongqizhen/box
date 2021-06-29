@@ -119,9 +119,9 @@
   /* height:88rpx;
   line-height: 88rpx; */
   padding:30rpx 80rpx; 
-  color: #00754B;
+  color: #FFF;
   font-size: 30rpx;
-  background:rgba(238,238,238,1);
+  background:#00754B;
   border-radius:44rpx;
     /* border-right: 1px solid #eee; */
 }
